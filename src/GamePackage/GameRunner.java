@@ -1,8 +1,5 @@
 package GamePackage;
 
-import utilities.HighScoreHandler;
-import utilities.SoundManager;
-
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -33,7 +30,6 @@ public class GameRunner {
         frame.addKeyListener(new EscapeListener(this));
         //EscapeListener used to allow the pause button stuff to work.
 
-        HighScoreHandler highScores = new HighScoreHandler("resourcesPlsNoDelet/scores.txt", frame);
         Controller ctrl = new Controller();
 
         frame.addKeyListener(ctrl);
@@ -45,8 +41,8 @@ public class GameRunner {
 
 
         //creating the two models
-        title = new TitleScreen(ctrl, highScores);
-        game = new Game(ctrl, highScores);
+        title = new TitleScreen(ctrl);
+        game = new Game(ctrl);
 
         //repaintTimer, used to update view every 'DELAY' milliseconds (50fps)
         repaintTimer = new Timer(DELAY,

@@ -1,40 +1,43 @@
 package GamePackage;
 
 import GamePackage.GameObjects.*;
-import utilities.HighScoreHandler;
 import utilities.SoundManager;
 import utilities.Vector2D;
 
+import java.util.ArrayList;
 import java.util.Stack;
 
 import static GamePackage.Constants.*;
 
 public class Game extends Model{
 
-    private final PlayerObject joe;
+    private final SorterObject sorter;
 
-    private final BossObject purpleBastard;
+    //private double score;
 
-    private double score;
-
-    private final AttributeStringObject<Integer> scoreText;
+    //private final AttributeStringObject<Integer> scoreText;
 
     private final Stack<CircleObject> circleStack;
+    private final ArrayList<Integer> circleTypes;
 
     private int activeButtonCount;
 
-    private double multiplier;
+    private int correctCount;
 
-    private final AttributeStringObject<Double> multiplierText;
+    private int circleCount;
+
+    private final AttributeStringObject<Integer> correctCountText;
 
     private int cutsceneState;
     private int cutsceneTimer;
     private final int CUTSCENE_STATE_LENGTH = 50;
     private boolean stillInCutscene;
 
-    private int newButtonSpawnTimer;
-    private static final int MIN_BUTTON_SPAWN_TIME = 500;
-    private static final int RANGE_BUTTON_SPAWN_TIME = 1000;
+    private int circleSpawnTimer;
+    private int currentCircleSpawnDelay;
+    private static final int MIN_CIRCLE_SPAWN_TIME = 100; //min of 2 seconds between circles
+    private static final int MAX_CIRCLE_SPAWN_TIME = 500; //initially 10 seconds between circles
+    private static final int CIRCLE_SPAWN_TIME_DECREMENT = 25; //time between circles goes down by half a second after each one spawns
 
     private boolean buttonCountChanged;
 
@@ -42,11 +45,12 @@ public class Game extends Model{
     private static final int START_RUINING_VOCALS_BUTTON_COUNT = 5;
 
 
-    public Game(Controller ctrl, HighScoreHandler hs) {
-        super(ctrl, hs);
+    public Game(Controller ctrl) {
+        super(ctrl);
         //joe = new PlayerObject(ctrl);
         //purpleBastard = new BossObject();
 
+        /*
         scoreText = new AttributeStringObject<>(
                 new Vector2D(HALF_WIDTH, 20),
                 new Vector2D(),
@@ -55,26 +59,32 @@ public class Game extends Model{
                 StringObject.MIDDLE_ALIGN
         );
 
+         */
+
+        sorter = new SorterObject(ctrl);
         circleStack = new Stack<>();
+        circleTypes = new ArrayList<>();
 
 
-        multiplierText = new AttributeStringObject<>(
+        correctCountText = new AttributeStringObject<>(
                 new Vector2D(GAME_WIDTH-20, GAME_HEIGHT - 20),
                 new Vector2D(),
                 "",
-                1.0,
-                "x",
+                0,
+                "/40",
                 StringObject.RIGHT_ALIGN,
                 StringObject.BIG_SANS
         );
 
+
+        setupModel();
 
 
     }
 
     @Override
     void endThis(){
-        hs.recordHighScore((int)score);
+
         super.endThis();
     }
 
@@ -143,10 +153,10 @@ public class Game extends Model{
             }
         } else{
             if (!stillInCutscene){
-                if (newButtonSpawnTimer < 1){
+                if (circleSpawnTimer < 1){
                     reviveAButtonObject(true);
                 } else{
-                    newButtonSpawnTimer--;
+                    circleSpawnTimer--;
                 }
             }
         }
@@ -205,29 +215,35 @@ public class Game extends Model{
     @Override
     void setupModel() {
         clearCollections();
-        score = 0;
+        //score = 0;
         activeButtonCount = 0;
-        multiplier = 1;
+        //multiplier = 1;
 
         cutsceneState = 0;
         cutsceneTimer = CUTSCENE_STATE_LENGTH;
         stillInCutscene = true;
 
-        for (int i = 0; i < 12; i++) {
-            circleStack.add(new ButtonObject());
+        currentCircleSpawnDelay = MAX_CIRCLE_SPAWN_TIME;
+        circleSpawnTimer = 0;
+
+        for (int i = 0; i < 40; i++) {
+            circleStack.add(new CircleObject());
         }
 
-        for (int i = 0; i < 20; i++) {
-            ripples.add(new BackgroundRippleObject());
-        }
+        //TODO: setup the button type ArrayList
+        //1st two will be a normal pink and blue thing (values 0 and 2)
+        //remaining 38 will be random values of 0, 1, 2, 3, 4, 5, and 6.
+        
 
-        aliveCharacters.add(joe.revive());
 
-        updateScoreDisplay();
 
-        setMultiplierDisplay(multiplier);
+        aliveSorterList.add(sorter.revive());
 
-        resetButtonSpawnTimer();
+        //updateScoreDisplay();
+
+        //setMultiplierDisplay(multiplier);
+
+        resetCircleSpawnTimer();
 
         aliveHUD.add(scoreText.revive());
         aliveHUD.add(multiplierText.revive());
@@ -239,6 +255,7 @@ public class Game extends Model{
     void clearCollections(){
         super.clearCollections();
         circleStack.clear();
+        circleTypes.clear();
     }
 
 
@@ -267,36 +284,27 @@ public class Game extends Model{
         }
     }
 
-    private void resetButtonSpawnTimer(){
-        newButtonSpawnTimer = MIN_BUTTON_SPAWN_TIME + (int)(Math.random() * RANGE_BUTTON_SPAWN_TIME);
+    private void resetCircleSpawnTimer(){
+        if (currentCircleSpawnDelay > MIN_CIRCLE_SPAWN_TIME){
+            currentCircleSpawnDelay -= CIRCLE_SPAWN_TIME_DECREMENT;
+        }
+        circleSpawnTimer = currentCircleSpawnDelay;
     }
 
-    private boolean canWeSpawnAButton(){
+    private boolean canWeSpawnACircle(){
         return (!circleStack.isEmpty());
     }
 
-    private void reviveAButtonObject(boolean allowedToMove){
-        if (canWeSpawnAButton()){
-            ButtonObject reviveThis = circleStack.pop();
-            if (aliveButtonObjects.isEmpty()){
-                if (allowedToMove) {
-                   reviveThis.revive();
-                } else{
-                    reviveThis.reviveNoMovement();
-                }
-            } else{
-                ButtonObject reviveFrom = aliveButtonObjects.get((int)(Math.random()*aliveButtonObjects.size()));
-                if (allowedToMove){
-                    reviveThis.revive(reviveFrom);
-                } else{
-                    reviveThis.reviveNoMovement(reviveFrom);
-                }
-            }
-            aliveButtonObjects.add(reviveThis);
-            reviveRipple(reviveThis);
-            resetButtonSpawnTimer();
-            buttonCountChanged = true;
+    private void reviveACircleObject(){
+        //get current circle count
+        //obtain integer at appropriate index from circleTypes
+        //pop top CircleObject from circleStack, revive with that data, push to aliveCircles
+        if (canWeSpawnACircle()) {
+            aliveCircleObjects.add(circleStack.pop().revive(circleTypes.get(circleCount),circleCount));
+            circleCount++;
+            resetCircleSpawnTimer();
         }
+
     }
 
     private void cutsceneHandler(){
@@ -329,7 +337,7 @@ public class Game extends Model{
                 case 7:
                     joe.shutIt();
                     purpleBastard.speak("\"Well then hit this button with your spacebar.\"");
-                    if (canWeSpawnAButton()){
+                    if (canWeSpawnACircle()){
                         ButtonObject firstButton = circleStack.pop().revive(
                                 new Vector2D(HALF_WIDTH,HALF_HEIGHT-50),
                                 new Vector2D(),

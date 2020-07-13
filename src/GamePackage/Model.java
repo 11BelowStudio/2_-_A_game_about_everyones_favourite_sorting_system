@@ -1,13 +1,10 @@
 package GamePackage;
 
 import GamePackage.GameObjects.*;
-import utilities.HighScoreHandler;
-import utilities.Vector2D;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 import static GamePackage.Constants.GAME_HEIGHT;
 import static GamePackage.Constants.GAME_WIDTH;
@@ -15,18 +12,18 @@ import static GamePackage.Constants.GAME_WIDTH;
 public abstract class Model {
 
     final List<StringObject> hudObjects;
-    final List<CharacterObject> characterObjects;
+    final List<SorterObject> sorterObjectList;
     final List<CircleObject> circleObjects;
-    final List<BackgroundRippleObject> backgroundObjects;
+    final List<BackgroundAreaObject> backgroundObjects;
 
 
     final List<StringObject> aliveHUD;
-    final List<CharacterObject> aliveCharacters;
+    final List<SorterObject> aliveSorterList;
     final List<CircleObject> aliveCircleObjects;
-    final List<BackgroundRippleObject> aliveBackground;
+    final List<BackgroundAreaObject> aliveBackground;
 
 
-    final Stack<BackgroundRippleObject> ripples;
+    //final Stack<BackgroundRippleObject> ripples;
 
 
     Color backgroundColor;
@@ -38,7 +35,6 @@ public abstract class Model {
 
     Controller ctrl;
 
-    HighScoreHandler hs;
 
 
 
@@ -60,25 +56,24 @@ public abstract class Model {
 
 
 
-    public Model(Controller ctrl, HighScoreHandler hs){
+    public Model(Controller ctrl){
 
         hudObjects = new ArrayList<>();
-        characterObjects = new ArrayList<>();
+        sorterObjectList = new ArrayList<>();
         circleObjects = new ArrayList<>();
         backgroundObjects = new ArrayList<>();
 
         aliveHUD = new ArrayList<>();
-        aliveCharacters = new ArrayList<>();
+        aliveSorterList = new ArrayList<>();
         aliveCircleObjects = new ArrayList<>();
         aliveBackground = new ArrayList<>();
 
-        ripples = new Stack<>();
+        //ripples = new Stack<>();
 
 
         gameOver = false;
         stopThat = false;
         backgroundColor = W3_NIGHT;
-        this.hs = hs;
         this.ctrl = ctrl;
     }
 
@@ -91,13 +86,13 @@ public abstract class Model {
                 o.draw(g);
                 //draws background objects
             }
-            for (GameObject o : buttonObjects) {
+            for (GameObject o : sorterObjectList) {
                 o.draw(g);
-                //draws buttons
+                //draws sorter
             }
-            for (GameObject o : characterObjects){
+            for (GameObject o : circleObjects){
                 o.draw(g);
-                //draws each character
+                //draws each circle
             }
             for (GameObject o : hudObjects) {
                 o.draw(g);
@@ -112,18 +107,18 @@ public abstract class Model {
             backgroundObjects.addAll(aliveBackground);
 
 
-            buttonObjects.clear();
-            buttonObjects.addAll(aliveButtonObjects);
+            sorterObjectList.clear();
+            sorterObjectList.addAll(aliveSorterList);
 
-            characterObjects.clear();
-            characterObjects.addAll(aliveCharacters);
+            circleObjects.clear();
+            circleObjects.addAll(aliveCircleObjects);
 
             hudObjects.clear();
             hudObjects.addAll(aliveHUD);
         }
         aliveBackground.clear();
-        aliveButtonObjects.clear();
-        aliveCharacters.clear();
+        aliveSorterList.clear();
+        aliveCircleObjects.clear();
         aliveHUD.clear();
     }
 
@@ -162,15 +157,12 @@ public abstract class Model {
         refreshLists();
 
         backgroundObjects.clear();
-        buttonObjects.clear();
-        characterObjects.clear();
+        sorterObjectList.clear();
+        aliveCircleObjects.clear();
         hudObjects.clear();
 
-        ripples.clear();
     }
 
-    boolean canWeSpawnARipple(){
-        return (!ripples.isEmpty());
-    }
+
 
 }

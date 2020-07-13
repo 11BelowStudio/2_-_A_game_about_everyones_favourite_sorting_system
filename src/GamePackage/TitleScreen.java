@@ -3,7 +3,6 @@ package GamePackage;
 import GamePackage.GameObjects.BackgroundRippleObject;
 import GamePackage.GameObjects.StringObject;
 import utilities.TextAssetReader;
-import utilities.HighScoreHandler;
 import utilities.SoundManager;
 import utilities.Vector2D;
 
@@ -39,8 +38,8 @@ public class TitleScreen extends Model {
     private final static ArrayList<String> CREDITS_TEXT = TextAssetReader.getCreditsText();
 
 
-    public TitleScreen(Controller ctrl, HighScoreHandler hs) {
-        super(ctrl, hs);
+    public TitleScreen(Controller ctrl) {
+        super(ctrl);
 
         //collection to hold menu screen stringobjects
         menuScreenStringObjects = new ArrayList<>();
@@ -154,7 +153,7 @@ public class TitleScreen extends Model {
                         titleScreenState = START_GAME_STATE;
                         titleScreenStateHasChanged = true;
                     } else if (showScores.isClicked(clickPoint)){
-                        createScrollingText(hs.StringArrayListLeaderboard(), 30, 50);
+                        //createScrollingText(hs.StringArrayListLeaderboard(), 30, 50);
                         titleScreenStateHasChanged = true;
                     } else if (showCredits.isClicked(clickPoint)){
                         createScrollingText(CREDITS_TEXT, 30, 50);
