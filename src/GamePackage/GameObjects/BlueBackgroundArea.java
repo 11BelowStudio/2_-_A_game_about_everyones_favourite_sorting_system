@@ -3,12 +3,15 @@ package GamePackage.GameObjects;
 import GamePackage.Constants;
 import utilities.Vector2D;
 
+import java.util.ArrayList;
+
 public class BlueBackgroundArea extends BackgroundAreaObject {
 
 
     public BlueBackgroundArea() {
         super(new Vector2D(0,0));
         objectColour = BLUE_BG;
+
 
         /*
         fills in the object destinations so it goes

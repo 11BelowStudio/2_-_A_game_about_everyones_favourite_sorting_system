@@ -37,24 +37,14 @@ public abstract class GameObject {
 
     static final double UP_RADIANS = Math.toRadians(270);
     static final double DOWN_RADIANS = Math.toRadians(90);
-    static final double LEFT_RADIANS = Math.toRadians(0);
-    static final double RIGHT_RADIANS = Math.toRadians(90);
+    static final double LEFT_RADIANS = Math.toRadians(180);
+    static final double RIGHT_RADIANS = Math.toRadians(0);
 
     //safety orange: #e97600
     static final Color SAFETY_ORANGE = new Color(233, 118, 0);
     //safety purple: #964f8e
     static final Color SAFETY_PURPLE = new Color(150, 79, 142);
 
-
-    static Image
-            JOE,
-            BOSS;
-    static{
-        try {
-            JOE = ImageManager.loadImage("joe-text");
-            BOSS = ImageManager.loadImage("boss-text");
-        } catch (IOException e) { e.printStackTrace(); }
-    }
 
 
 

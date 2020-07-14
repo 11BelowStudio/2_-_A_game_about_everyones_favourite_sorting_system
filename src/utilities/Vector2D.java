@@ -63,7 +63,7 @@ public final class Vector2D {
 
     // String for displaying vector as text
     public String toString() {
-        return(x + ", "  + y);
+        return "("+x + ", "  + y+")";
 
     }
 

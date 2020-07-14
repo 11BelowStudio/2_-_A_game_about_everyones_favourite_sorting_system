@@ -24,7 +24,7 @@ public class SorterObject extends GameObject {
 
     private Controller ctrl;
 
-    boolean isBlue; //true if in blue state, false if not in blue state
+    boolean destIsBlue; //true if sending to blue, false if sending to pink
 
     private static Image BLUE_SPRITE, PINK_SPRITE;
     static{
@@ -47,12 +47,12 @@ public class SorterObject extends GameObject {
 
         //state will change to opposite state if the spacebar has been pressed
         if (currentAction.checkForSpacePress()){
-            if (isBlue){
+            if (destIsBlue){
                 img = PINK_SPRITE;
-                isBlue = false;
+                destIsBlue = false;
             } else{
                 img = BLUE_SPRITE;
-                isBlue = true;
+                destIsBlue = true;
             }
         }
 
@@ -62,7 +62,7 @@ public class SorterObject extends GameObject {
     public SorterObject revive(){
         super.revive();
         img = BLUE_SPRITE;
-        isBlue = true;
+        destIsBlue = true;
         return this;
     }
 
@@ -73,6 +73,10 @@ public class SorterObject extends GameObject {
     @Override
     void renderObject(Graphics2D g) {
         g.drawImage(img,-IMG_HALF_WIDTH,-IMG_HALF_HEIGHT,null);
+    }
+
+    public boolean checkIfSendingToBlue(){
+        return destIsBlue;
     }
 
 }

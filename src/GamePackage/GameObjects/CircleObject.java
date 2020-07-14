@@ -1,8 +1,10 @@
 package GamePackage.GameObjects;
 
+import utilities.ImageManager;
 import utilities.Vector2D;
 
 import java.awt.*;
+import java.io.IOException;
 
 public class CircleObject extends GameObject {
 
@@ -14,10 +16,15 @@ public class CircleObject extends GameObject {
     private static final int CIRCLE_DIAMETER = 64;
     private static final int CIRCLE_RADIUS = CIRCLE_DIAMETER/2;
 
+    private static final int DEFAULT_SPEED = 96;
+    private static final double SPEED_INCREMENT = 0.1;
+
     private boolean cisnt; //true if this circle will fade to a different one
     private boolean figuringThingsOut; //true until delay before fade expires
     private boolean transitioning; //true until the fade is done
     private Color overlayColor;
+
+
 
     private int overlayR;
     private int overlayG;
@@ -62,6 +69,16 @@ public class CircleObject extends GameObject {
     static final int SORTER_Y_DESTINATION = 480; //initial destination for downwards Y travel
 
     Vector2D destinationVector;
+
+    boolean showingResult;
+
+    static Image CORRECT,WRONG;
+    static{
+        try{
+            CORRECT = ImageManager.loadImage("correct");
+            WRONG = ImageManager.loadImage("wrong");
+        } catch (IOException e) { e.printStackTrace(); }
+    }
 
     public CircleObject() {
         super(new Vector2D(), new Vector2D());
@@ -145,7 +162,7 @@ public class CircleObject extends GameObject {
 
     //the plan is that, as well as a stack for circleobjects, there will be an array of integers to declare what sort of circles these are
     public CircleObject revive(int whatTypeOfCircle, int currentCircleCount){
-        circleVelocity = 64 + (64 * (0.05 * currentCircleCount));
+        circleVelocity = DEFAULT_SPEED + (DEFAULT_SPEED * (0.1 * currentCircleCount));
         super.revive(
                 new Vector2D(400,-32),
                 Vector2D.polar(DOWN_RADIANS, circleVelocity)
@@ -162,6 +179,8 @@ public class CircleObject extends GameObject {
 
         //initialising the colour for the circle
         initColors();
+
+        showingResult = false;
 
         return this;
 
@@ -222,6 +241,10 @@ public class CircleObject extends GameObject {
         }
         g.setColor(Color.black);
         g.drawOval(-CIRCLE_RADIUS,-CIRCLE_RADIUS,CIRCLE_DIAMETER,CIRCLE_DIAMETER);
+        if (showingResult){
+            //renders the appropriate result image above the circle if it should be showing an image
+            g.drawImage(img,-CIRCLE_RADIUS,-CIRCLE_RADIUS,CIRCLE_DIAMETER,CIRCLE_DIAMETER,null);
+        }
     }
 
     private void fillTheCircle(Graphics2D g){
@@ -243,26 +266,43 @@ public class CircleObject extends GameObject {
     }
 
     public boolean isThisCorrect(){
-        boolean result;
+        transitioning = false;
+        //pretty much instantly skipping to the end of the 'transitioning' phase for circles that are transitioning
+        //seeing as this function is only going to be called once all the CircleObjects have been 'sorted'
+        boolean isItCorrect;
         switch (circleType){
             case PINK_CIRCLE:
             case PINK_FROM_BLUE:
                 //pink are correct only if they are in pink
-                result = (currentLocation == IN_PINK);
+                isItCorrect = (currentLocation == IN_PINK);
                 break;
             case BLUE_CIRCLE:
             case BLUE_FROM_PINK:
                 //blue only correct if they are in blue
-                result = (currentLocation == IN_BLUE);
+                isItCorrect = (currentLocation == IN_BLUE);
                 break;
             case YELLOW_CIRCLE:
             case PURPLE_FROM_BLUE:
             case PURPLE_FROM_PINK:
             default:
                 //ah yes, the limitations of the gender binary
-                result = false;
+                isItCorrect = false;
                 break;
         }
-        return result;
+        showingResult = true;
+        if (isItCorrect){
+            img = CORRECT;
+        } else{
+            img = WRONG;
+        }
+        return isItCorrect;
+    }
+
+    public boolean checkIfThisIsWaitingToBeSorted(){
+        return (movementState == WAITING_TO_BE_SORTED);
+    }
+
+    public boolean isItStillMoving(){
+        return (movementState != FINISHED_MOVING);
     }
 }

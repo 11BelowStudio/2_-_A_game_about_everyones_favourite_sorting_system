@@ -11,7 +11,8 @@ public class GameRunner {
     private final GameFrame frame;
 
     private final Game game;
-    private final TitleScreen title;
+    //private final TitleScreen title;
+    private final Game title;
     private final View view;
 
     private final Timer repaintTimer;
@@ -39,9 +40,12 @@ public class GameRunner {
 
         frame.addView(view);
 
+        //TODO: bring back the TitleScreen stuff (once the TitleScreen has been made ofc)
+
 
         //creating the two models
-        title = new TitleScreen(ctrl);
+        //title = new TitleScreen(ctrl);
+        title = new Game(ctrl);
         game = new Game(ctrl);
 
         //repaintTimer, used to update view every 'DELAY' milliseconds (50fps)

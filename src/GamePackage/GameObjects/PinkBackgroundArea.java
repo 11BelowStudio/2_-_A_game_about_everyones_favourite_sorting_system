@@ -3,6 +3,8 @@ package GamePackage.GameObjects;
 import GamePackage.Constants;
 import utilities.Vector2D;
 
+import java.util.ArrayList;
+
 public class PinkBackgroundArea extends BackgroundAreaObject {
 
 
@@ -10,6 +12,7 @@ public class PinkBackgroundArea extends BackgroundAreaObject {
         //on the right side
         super(new Vector2D(480,0));
         objectColour = PINK_BG;
+
 
         /*
         fills in the object destinations so it goes
@@ -23,5 +26,6 @@ public class PinkBackgroundArea extends BackgroundAreaObject {
                 objectDestinations.add(new Vector2D(Constants.GAME_WIDTH - objectXDestinations[j],currentY));
             }
         }
+
     }
 }

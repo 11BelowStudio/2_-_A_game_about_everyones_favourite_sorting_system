@@ -16,6 +16,8 @@ import java.util.Arrays;
 
 public class SoundManager {
 
+    //TODO: add some music
+
 
     private static boolean playingMenu = false;
     private static boolean doingWellTheme = false;

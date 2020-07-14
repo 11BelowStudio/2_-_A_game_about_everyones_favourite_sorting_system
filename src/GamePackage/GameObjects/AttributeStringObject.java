@@ -37,18 +37,18 @@ public class AttributeStringObject<T> extends StringObject {
 
     public AttributeStringObject<T> revive(T value){
         super.revive();
-        return (this.showValue(value));
+        return (this.setValue(value));
     }
 
-    public AttributeStringObject<T> rename(String attributeName){ attributeString.rename(attributeName); updateText(); return this;}
+    public AttributeStringObject<T> setAttribute(String attributeName){ attributeString.rename(attributeName); updateText(); return this;}
 
-    public AttributeStringObject<T> showValue(T value){
+    public AttributeStringObject<T> setValue(T value){
         attributeString.showValue(value);
         updateText();
         return this;
     }
 
-    public AttributeStringObject<T> changeSuffix(String suffix){ attributeString.changeSuffix(suffix); updateText(); return this;}
+    public AttributeStringObject<T> setSuffix(String suffix){ attributeString.changeSuffix(suffix); updateText(); return this;}
 
     public String getAttributeName(){ return attributeString.getAttributeName(); }
 

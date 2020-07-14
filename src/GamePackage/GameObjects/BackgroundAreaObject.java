@@ -27,6 +27,7 @@ public abstract class BackgroundAreaObject extends GameObject {
 
         objectCount = 0;
         objectDestinations = new ArrayList<>();
+
     }
 
     @Override

@@ -1,6 +1,6 @@
 package GamePackage;
 
-import GamePackage.GameObjects.BackgroundRippleObject;
+//import GamePackage.GameObjects.BackgroundRippleObject;
 import GamePackage.GameObjects.StringObject;
 import utilities.TextAssetReader;
 import utilities.SoundManager;
@@ -13,6 +13,8 @@ import java.util.List;
 import static GamePackage.Constants.*;
 
 public class TitleScreen extends Model {
+
+    //TODO: This
 
     private int titleScreenState;
     private static final int SETTING_UP_SCROLLING_TEXT_STATE = 0;
@@ -76,10 +78,13 @@ public class TitleScreen extends Model {
 
     @Override
     void setupModel() {
+        /*
         rippleTimer = 0;
         for (int i = 0; i < 50; i++) {
             ripples.push(new BackgroundRippleObject());
         }
+
+         */
 
 
         //titleScreenStateHasChanged = false;
@@ -108,6 +113,7 @@ public class TitleScreen extends Model {
 
         boolean titleScreenStateHasChanged = false;
 
+        /*
         for (BackgroundRippleObject o: backgroundObjects) {
             o.update();
             if (o.stillAlive()){
@@ -117,6 +123,8 @@ public class TitleScreen extends Model {
             }
         }
 
+         */
+
         for (StringObject o: hudObjects) {
             o.update();
             if (o.stillAlive()){
@@ -125,12 +133,15 @@ public class TitleScreen extends Model {
         }
 
 
+        /*
         if (Math.random()*RIPPLE_CHANCES < rippleTimer && canWeSpawnARipple()){
             aliveBackground.add(ripples.pop().revive());
             rippleTimer = 0;
         } else{
             rippleTimer++;
         }
+
+         */
 
         Action currentAction = ctrl.getAction();
         switch (titleScreenState) {

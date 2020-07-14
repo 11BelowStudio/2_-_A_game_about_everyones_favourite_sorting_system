@@ -12,7 +12,7 @@ public class GameFrame extends JFrame {
     private Component comp;
 
     public GameFrame() {
-        this.setTitle("The Button Factory");
+        this.setTitle("2: A Game About Society's Favourite Sorting System");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
