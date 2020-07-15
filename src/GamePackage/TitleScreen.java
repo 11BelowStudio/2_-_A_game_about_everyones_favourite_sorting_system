@@ -16,7 +16,7 @@ import static GamePackage.Constants.*;
 
 public class TitleScreen extends Model {
 
-    //TODO: This
+    //TODO: Music
 
     private int titleScreenState;
     private static final int SETTING_UP_SCROLLING_TEXT_STATE = 0;
@@ -35,8 +35,11 @@ public class TitleScreen extends Model {
 
     private final ArrayList<StringObject> scrollingTextToAdd;
 
+
+    //TODO: update contents of IntroCrawlText.txt
     private final static ArrayList<String> OPENING_TEXT = TextAssetReader.getOpeningText();
 
+    //TODO: update contents of credits.txt
     private final static ArrayList<String> CREDITS_TEXT = TextAssetReader.getCreditsText();
 
     private final Stack<BackgroundCircleObject> bgCircles;

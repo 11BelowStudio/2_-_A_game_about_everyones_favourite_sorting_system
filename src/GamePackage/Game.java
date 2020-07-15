@@ -210,6 +210,8 @@ public class Game extends Model{
         circleSpawnTimer = 1; //circle spawning logic always decrements the timer by 1 before checking it
         //setting timer to 1 ensures circle will spawn on frame 1
 
+        //TODO: start anticipatory music whilst waiting for player to press space
+
     }
 
     @Override
@@ -300,6 +302,8 @@ public class Game extends Model{
             //the pressSpaceText is no longer needed
         gameState = CIRCLES_SPAWNING;
             //now in CIRCLES_SPAWNING state
+        //TODO: end anticipatory music
+        //TODO: start circle spawning music
     }
 
 
@@ -428,6 +432,9 @@ public class Game extends Model{
                     s.kill();
                 }
                 break;
+            case 21:
+                //TODO: maybe stop current music, play some more intense/frantic music instead?
+                break;
             default:
                 //nothing for default case
                 break;
@@ -474,6 +481,8 @@ public class Game extends Model{
         //starts at 0
         countOnThisFrame = false;
         //counts every other frame (25 counted per second) so it's actually possible to see them being counted
+
+        //TODO: end gameplay music, start more relaxing 'it's done now pls to relax' music
     }
 
 
