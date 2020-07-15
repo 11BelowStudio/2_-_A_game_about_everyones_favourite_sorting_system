@@ -16,6 +16,8 @@ public class BackgroundCircleObject extends CircleObject {
     private static final int MAX_SPEED = 256;
     private static final int RANGE_SPEED = MAX_SPEED-MIN_SPEED;
 
+    private int overlayAlpha;
+
     public BackgroundCircleObject() {
         super(new Vector2D(), new Vector2D());
     }
@@ -27,34 +29,71 @@ public class BackgroundCircleObject extends CircleObject {
                 Vector2D.polarWithRandomAngle(MIN_SPEED + (Math.random() * RANGE_SPEED))
         );
         //and now, for defining the colour of it
-        switch ((int)(Math.random() * 6)){
+        cisnt = false;
+        switch ((int)(Math.random() * 9)) {
             case 0:
             case 1:
-                // 1/3 chance of being pink
                 objectColour = PINK_COLOUR;
                 break;
             case 2:
+                objectColour = PINK_COLOUR;
+                overlayColor = BLUE_COLOUR;
+                cisnt = true;
+                break;
             case 3:
-                // 1/3 chance of being blue
+            case 4:
                 objectColour = BLUE_COLOUR;
                 break;
-            case 4:
-                // 1/6 chance of being yellow
+            case 5:
+                objectColour = BLUE_COLOUR;
+                overlayColor = PINK_COLOUR;
+                cisnt = true;
+            case 6:
+                objectColour = PURPLE_COLOUR;
+                overlayColor = PINK_COLOUR;
+                cisnt = true;
+                break;
+            case 7:
+                objectColour = PURPLE_COLOUR;
+                overlayColor = BLUE_COLOUR;
+                cisnt = true;
+            case 8:
+            default:
                 objectColour = YELLOW_COLOUR;
                 break;
-            case 5:
-            default:
-                // 1/6 chance of being purple
-                // (it's also default juuuuuuuuust in case)
-                objectColour = PURPLE_COLOUR;
-                break;
+        }
+        if (cisnt){
+            transitioning = true;
+            overlayR = overlayColor.getRed();
+            overlayB = overlayColor.getBlue();
+            overlayG = overlayColor.getGreen();
+            overlayAlpha = 255;
+            transitionLength = (int)(1 + Math.random()*50);
+            //how many frames between each decrement of the overlay alpha
+            transitionTimer = transitionLength;
         }
         return this;
     }
 
     @Override
     void individualUpdate() {
-
+        if (transitioning){
+            //decrement the transition timer if it's still transitioning
+            transitionTimer--;
+            if (transitionTimer == 0){
+                //if the transition timer is done
+                //decrement the overlay alpha
+                overlayAlpha--;
+                if (overlayAlpha > 0){
+                    //if it's still above 0, replace the overlay colour accordingly, and reset the transition timer
+                    overlayColor = new Color(overlayR,overlayG,overlayB,overlayAlpha);
+                    transitionTimer = transitionLength;
+                } else{
+                    //if it's fully transparent, it's done transitioning
+                    transitioning = false;
+                }
+            }
+        }
     }
 
     @Override

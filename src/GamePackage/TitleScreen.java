@@ -36,16 +36,11 @@ public class TitleScreen extends Model {
     private final ArrayList<StringObject> scrollingTextToAdd;
 
 
-    //TODO: update contents of IntroCrawlText.txt
     private final static ArrayList<String> OPENING_TEXT = TextAssetReader.getOpeningText();
 
     //TODO: update contents of credits.txt
     private final static ArrayList<String> CREDITS_TEXT = TextAssetReader.getCreditsText();
 
-    private final Stack<BackgroundCircleObject> bgCircles;
-
-    private boolean notDoneSpawningCircles;
-    private boolean spawnCircleOnThisFrame;
 
 
     public TitleScreen(Controller ctrl) {
@@ -64,7 +59,7 @@ public class TitleScreen extends Model {
         );
         subtitleText = new StringObject(
                 new Vector2D(HALF_WIDTH,6*(SIXTEENTH_HEIGHT)),
-                new Vector2D(),"A game about everyone's favourite sorting system!",
+                new Vector2D(),"A Game About Everyone's Favourite Sorting System!",
                 StringObject.MIDDLE_ALIGN,
                 StringObject.SANS_30
         );
@@ -92,8 +87,6 @@ public class TitleScreen extends Model {
         //declaring an arrayList to hold any scrollingText that needs to be added to aliveHUD
         scrollingTextToAdd = new ArrayList<>();
 
-        //declaring a stack to hold inactive BackgroundCircleObjects
-        bgCircles = new Stack<>();
     }
 
     @Override
@@ -137,14 +130,10 @@ public class TitleScreen extends Model {
         }
 
 
-        //setting up the background circle stuff
+        //setting up the background circle stuff (aka just shoving 40 of them onto aliveBackground)
         for (int i = 0; i < 40; i++) {
-            //40 BackgroundCircleObjects constructed and pushed to bgCircles
-            bgCircles.push(new BackgroundCircleObject());
+            aliveBackground.add(new BackgroundCircleObject().revive());
         }
-        notDoneSpawningCircles = true;
-        spawnCircleOnThisFrame = false;
-        //well, the value is flipped before it's checked, so having it false makes a bg circle spawn on frame 1
     }
 
 
@@ -176,14 +165,6 @@ public class TitleScreen extends Model {
             }
         }
 
-
-        if (notDoneSpawningCircles){
-            spawnCircleOnThisFrame = !spawnCircleOnThisFrame; //flips value of spawnCircleOnThisFrame
-            if (spawnCircleOnThisFrame){
-                //handles the spawning of bgObjects every other frame
-                bgCircleSpawnHandler();
-            }
-        }
 
         Action currentAction = ctrl.getAction();
         switch (titleScreenState) {
@@ -225,13 +206,6 @@ public class TitleScreen extends Model {
         }
     }
 
-    private void bgCircleSpawnHandler(){
-        //pops top item from bgCircles, revives it, and adds it to aliveBackground
-        aliveBackground.add(bgCircles.pop().revive());
-        //if there's still stuff in bgCircles, it's not done spawning them
-        notDoneSpawningCircles = !bgCircles.isEmpty();
-    }
-
 
 
     private void createScrollingText(ArrayList<String> theText, int distFromBottom, double scrollSpeed){
@@ -239,10 +213,10 @@ public class TitleScreen extends Model {
         titleScreenState = SETTING_UP_SCROLLING_TEXT_STATE;
         for (String s: theText){
             if (!s.isEmpty()) {
-                scrollingTextToAdd.add(new StringObject(new Vector2D(HALF_WIDTH, GAME_HEIGHT + distFromBottom), scrollSpeed, s, StringObject.MIDDLE_ALIGN));
+                scrollingTextToAdd.add(new StringObject(new Vector2D(HALF_WIDTH, GAME_HEIGHT + distFromBottom), scrollSpeed, s, StringObject.MIDDLE_ALIGN, StringObject.SANS_30));
             }
             //distFromBottom += distBetweenLines;
-            distFromBottom += 22;
+            distFromBottom += 32;
         }
     }
 

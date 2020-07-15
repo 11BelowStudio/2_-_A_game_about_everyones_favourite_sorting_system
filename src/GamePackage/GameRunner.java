@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+import static GamePackage.Constants.DEFAULT_DIMENSION;
 import static GamePackage.Constants.DELAY;
 
 public class GameRunner {
@@ -38,9 +39,10 @@ public class GameRunner {
 
         view = new View();
 
-        frame.addView(view);
+        view.setPreferredSize(DEFAULT_DIMENSION);
+        view.setMinimumSize(DEFAULT_DIMENSION);
 
-        //TODO: bring back the TitleScreen stuff (once the TitleScreen has been made ofc)
+        frame.addView(view);
 
 
         //creating the two models

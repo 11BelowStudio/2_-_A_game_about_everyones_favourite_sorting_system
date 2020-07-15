@@ -1,13 +1,13 @@
-The Button Factory
+2
+A Game About Everyone's Favourite Sorting System!
 
-This game was made for the 'So Bad It's Good' Jam 2020
-https://itch.io/jam/sbigjam2020
+This game was made for the 'Trans Jam' on Itch.io
+https://itch.io/jam/trans-jam
 
 * DESIGN *
 
 Designed by 11BelowStudio
-Loosely based on that 'hello my name is joe and I work in a button factory' thing
-(no idea who came up with that in the first place)
+
 
 * CODE *
 
@@ -15,32 +15,127 @@ Programming by 11BelowStudio
 
 Uses some sample code provided by Dr. Dimitri Ognibene
 
-Code to include the images in the .jar by JB Nizet on StackOverflow
+Code to include the images in the .jar
+by JB Nizet on StackOverflow
 (https://stackoverflow.com/a/8362018)
-Code to include some text in the .jar by Drew MacInnis on StackOverflow
+
+Code to include some text in the .jar
+by Drew MacInnis on StackOverflow
 (https://stackoverflow.com/a/20389418)
+
+Wrapped as an .exe using Launch4j
+
 
 * AUDIO *
 
-The good vocals and the decent voice acting by DELTA100
-Lyrics, bad voice work/acapella, kazooing and all the other sounds by 11BelowStudio
+Noises by 11BelowStudio
 Audio processed/mixed/etc using Audacity
+
 
 * VISUALS *
 
 Visuals by 11BelowStudio
 Sprites made using Paint.NET
 
-* CAST *
 
-Joe: Joe Mamma
-The boss: scary purple individual
-The player: you (I think)
-Percival: ????????????????
+* YEAH THAT'S ALL THE CREDITS *
 
+Press space to return to the menu
+or stick around if you want more stuff to read
 
 
 
+* DEVELOPER FOOTNOTE-Y THING *
+
+Hello!
+As you haven't pressed space yet,
+I'm assuming that you want to stick around for this.
+And, if you get bored or something
+you can just press space any time to go to the menu.
+
+Couple of quick content warnings first:
+Yes, there will be colourful language,
+discussion about the subject of the game,
+and I apologize in advance if it comes across as
+a bit tone-deaf (I'm austistic,
+so that sort of stuff is kinda hard for me)
+
+Welp, with that out of the way, time to start!
+
+So, I'll start by addressing the elephant in the room.
+
+Yes, this game is about the gender binary system
+and the act of assigning gender at birth,
+and how fucking stupid that entire process is.
+
+So, in case you are not aware about the problems,
+imma just go over the basics of why the
+gender binary is a complete pile of
+steaming bullcrap.
+
+* It asserts that sex = gender, when,
+in reality, they are completely different.
+tl;dr sex is physical, gender is mental.
+
+* It fails to take the existence of
+intersex people into account.
+And, when this glaring issue arises,
+the usual response tends to revolve
+around blaming them for not neatly
+fitting into these defined categories,
+and then causing irreparable damage to them
+by forcing them (physically and mentally)
+to conform to the binary anyway.
+
+* I've been looking around everywhere,
+and I still can't find who the fuck asked
+to be forced to conform to a certain identity
+from the moment they were born,
+without any choice in the matter.
+
+* Hell, I find it hard enough to conform
+to the expectations of neurotypical
+society as-is, why the fuck am I also
+forced to conform to other people's
+poorly-concieved notions of gender
+on top of that?
+
+* And, if you think about it,
+the gender binary stuff basically says
+'You must constantly advertise to
+everyone what genitals you have,
+through your appearance,
+your actions, and your thoughts.
+There is no excuse for not
+advertising what genitals you have'.
+
+After all, it revolves around putting
+people into one of two categories
+based entirely on their genitals,
+and then effectively shaping their lives
+around what they have downstairs.
+
+And that's honestly kinda fucked up.
+
+Why the fuck should I be letting
+everyone know what genitals I have?
+And why should we expect others
+to constantly inform us about what
+they have downstairs?
+
+And, if you're the sort of person who wants
+to be able to instantly tell what genitals
+people have (due to the gender binary
+system forcing people to advertise this)
+there's a name for people such as yourself:
+Perverts.
+
+So, if that does apply to you,
+you are a danger to society,
+and you need to stop being a perv.
+
+
+//TODO: actually finish writing this
 
 
 
@@ -68,7 +163,3 @@ Percival: ????????????????
 
 
 
-
-
-
-joe mamma lmao gottem *dab*

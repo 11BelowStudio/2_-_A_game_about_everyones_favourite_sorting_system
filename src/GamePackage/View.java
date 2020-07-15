@@ -28,7 +28,6 @@ public class View extends JComponent {
 
         displayingModel = false;
 
-
     }
 
     void showModel(Model m){

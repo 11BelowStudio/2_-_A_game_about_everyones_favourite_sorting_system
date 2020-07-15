@@ -32,8 +32,18 @@ public class SorterObject extends GameObject {
     //TODO: spritesheets. (seperate pink and blue spritesheet, 4 frames on each)
     //TODO: array of the co-ordinates for each sprite in the spritesheets
 
-    private int currentFrame;
+    private int animationCountdown;
+    private static int ANIMATION_DELAY = 4;
+
+    private int currentSpriteCursor;
     //will be used to get the correct data from the spritesheet co-ordinate array when it comes to drawing them
+
+    private static final int[][] SPRITESHEET_X_COORDS = new int[][]{
+            {0,160},
+            {160,320},
+            {320,480},
+            {480,640},
+    };
 
     private static Image BLUE_SPRITE, PINK_SPRITE;
     static{
@@ -54,8 +64,12 @@ public class SorterObject extends GameObject {
     void individualUpdate() {
         Action currentAction = ctrl.getAction();
 
-        currentFrame++; //update spritesheet frame
-        currentFrame = currentFrame % 4; //only values 0-3 are valid, ensures that the value is valid
+        animationCountdown--; //decrement the animation countdown
+        if (animationCountdown == 0) { //if the countdown is done
+            animationCountdown = ANIMATION_DELAY; //reset it
+            currentSpriteCursor++; //update spritesheet frame
+            currentSpriteCursor = currentSpriteCursor % 4; //only values 0-3 are valid, this ensures that the value is valid
+        }
 
         //state will change to opposite state if the spacebar has been pressed
         if (currentAction.checkForSpacePress()){
@@ -77,6 +91,7 @@ public class SorterObject extends GameObject {
         img = BLUE_SPRITE;
         destIsBlue = true;
         hasSwapped = false;
+        animationCountdown = ANIMATION_DELAY;
         return this;
     }
 
@@ -87,7 +102,19 @@ public class SorterObject extends GameObject {
     @Override
     void renderObject(Graphics2D g) {
         //TODO: spritesheet stuff
-        g.drawImage(img,-IMG_HALF_WIDTH,-IMG_HALF_HEIGHT,null);
+        //g.drawImage(img,-IMG_HALF_WIDTH,-IMG_HALF_HEIGHT,null);
+        g.drawImage(
+                img,
+                -IMG_HALF_WIDTH,
+                -IMG_HALF_HEIGHT,
+                IMG_HALF_WIDTH,
+                IMG_HALF_HEIGHT,
+                SPRITESHEET_X_COORDS[currentSpriteCursor][0],
+                0,
+                SPRITESHEET_X_COORDS[currentSpriteCursor][1],
+                IMG_HEIGHT,
+                null
+                );
     }
 
     public boolean checkIfSendingToBlue(){ return destIsBlue; }
