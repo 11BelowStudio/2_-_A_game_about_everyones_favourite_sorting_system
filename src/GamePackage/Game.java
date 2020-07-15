@@ -24,6 +24,16 @@ public class Game extends Model{
     private final BlueBackgroundArea blueArea;
     private final PinkBackgroundArea pinkArea;
 
+    private final StringObject pressSpaceText;
+
+
+    private final List<StringObject> informationalStringObjects;
+    private final StringObject infoA;
+    private final StringObject infoB;
+    private final StringObject infoC;
+    private final StringObject infoD;
+
+
     private int activeButtonCount;
 
     private int cutsceneState;
@@ -50,10 +60,11 @@ public class Game extends Model{
     private static final int START_RUINING_VOCALS_BUTTON_COUNT = 5;
 
     private int gameState;
-    private final int CIRCLES_SPAWNING = 0; //when circles are still spawning in
-    private final int NO_MORE_CIRCLES = 1; //when waiting for last circle(s) to go to their destinations
-    private final int COUNTING_CORRECT_CIRCLES = 2; //seeing how many circles are sorted properly
-    private final int ALL_DONE = 3; //result shown to player
+    private static final int WAITING_TO_START = 0; //waiting to start
+    private static final int CIRCLES_SPAWNING = 1; //when circles are still spawning in
+    private static final int NO_MORE_CIRCLES = 2; //when waiting for last circle(s) to go to their destinations
+    private static final int COUNTING_CORRECT_CIRCLES = 3; //seeing how many circles are sorted properly
+    private static final int ALL_DONE = 4; //result shown to player
 
     private int correctCount;
     private int correctCountCursor;
@@ -93,6 +104,47 @@ public class Game extends Model{
                 StringObject.BIG_SANS
         );
 
+        pressSpaceText = new StringObject(
+                new Vector2D(HALF_WIDTH,HALF_HEIGHT),
+                new Vector2D(),
+                "Press space to sort",
+                StringObject.MIDDLE_ALIGN,
+                StringObject.BIG_SANS
+        );
+
+        informationalStringObjects = new ArrayList<>();
+        infoA = new StringObject(
+                new Vector2D(HALF_WIDTH,HALF_HEIGHT-96),
+                new Vector2D(),
+                "",
+                StringObject.MIDDLE_ALIGN,
+                StringObject.BIG_SANS
+        );
+        infoB = new StringObject(
+                new Vector2D(HALF_WIDTH,HALF_HEIGHT-32),
+                new Vector2D(),
+                "",
+                StringObject.MIDDLE_ALIGN,
+                StringObject.BIG_SANS
+        );
+        infoC = new StringObject(
+                new Vector2D(HALF_WIDTH,HALF_HEIGHT+32),
+                new Vector2D(),
+                "",
+                StringObject.MIDDLE_ALIGN,
+                StringObject.BIG_SANS
+        );
+        infoD = new StringObject(
+                new Vector2D(HALF_WIDTH,HALF_HEIGHT+96),
+                new Vector2D(),
+                "",
+                StringObject.MIDDLE_ALIGN,
+                StringObject.BIG_SANS
+        );
+        informationalStringObjects.add(infoA);
+        informationalStringObjects.add(infoB);
+        informationalStringObjects.add(infoC);
+        informationalStringObjects.add(infoD);
 
         setupModel();
 
@@ -148,7 +200,7 @@ public class Game extends Model{
         }
 
         //keeping backgroundareaobjects active
-        for (BackgroundAreaObject o: backgroundObjects){
+        for (GameObject o: backgroundObjects){
             o.update();
             aliveBackground.add(o);
         }
@@ -156,6 +208,12 @@ public class Game extends Model{
 
         //now that the main game objects have been updated and such, it's time to do the special update operations for the current gamestate
         switch (gameState){
+            case WAITING_TO_START:
+                if(sorter.checkForFirstSwap()){
+                    pressSpaceText.kill();
+                    gameState = CIRCLES_SPAWNING;
+                }
+                break;
             case CIRCLES_SPAWNING:
                 circleSpawnHandler();
                 break;
@@ -216,38 +274,44 @@ public class Game extends Model{
 
     @Override
     void setupModel() {
+        //clears existing collections
         clearCollections();
-        //score = 0;
-        //activeButtonCount = 0;
-        //multiplier = 1;
 
-        //cutsceneState = 0;
-        //cutsceneTimer = CUTSCENE_STATE_LENGTH;
-        //stillInCutscene = true;
 
-        gameState = CIRCLES_SPAWNING;
+        //sets the gamestate to 'WAITING_TO_START'
+        gameState = WAITING_TO_START;
 
+        //0 circles (and 0 correct ones)
         circleCount = 0;
         correctCount = 0;
 
+        //pushes 40 CircleObjects to the circleStack
         for (int i = 0; i < 40; i++) {
             circleStack.add(new CircleObject());
         }
 
 
-        //1st two will be a normal pink and blue thing (values 0 and 2)
-        //remaining 38 will be random values of 0, 1, 2, 3, 4, 5, and 6.
-        circleTypes.add(0); //normal pink
-        circleTypes.add(2); //normal blue
-        for (int i = 0; i < 38 ; i++) {
+        //the first 3 circles to spawn will be (cis) pink, (cis) blue, and yellow
+        circleTypes.add(CircleObject.PINK_CIRCLE);
+        circleTypes.add(CircleObject.BLUE_CIRCLE);
+        circleTypes.add(CircleObject.YELLOW_CIRCLE);
+
+        //remaining 37 will be random values of 0, 1, 2, 3, 4, 5, and 6 (the enumerated types of values).
+        for (int i = 0; i < 37 ; i++) {
             circleTypes.add((int)(Math.random()*7));
         }
 
-
+        //sorter is revived, put in aliveSorterList
         aliveSorterList.add(sorter.revive());
 
+        //blue area and pink area are revived, added to aliveBackground
         aliveBackground.add(blueArea.revive());
         aliveBackground.add(pinkArea.revive());
+
+        //the 'press space to sort' text is revived, added to AliveHUD so it's visible
+        aliveHUD.add(pressSpaceText.revive());
+
+
 
         //updateScoreDisplay();
 
@@ -272,6 +336,11 @@ public class Game extends Model{
         super.clearCollections();
         circleStack.clear();
         circleTypes.clear();
+
+        //not exactly 'clearing' this, but ensuring all the informational string objects are dead.
+        for(StringObject s: informationalStringObjects){
+            s.kill();
+        }
     }
 
 
@@ -330,12 +399,87 @@ public class Game extends Model{
             aliveCircleObjects.add(circleStack.pop().revive(circleTypes.get(circleCount),circleCount));
             if (canWeSpawnACircle()) {
                 circleCount++;
+                showInfoWhenCirclesHaveSpawned(); //shows the appropriate info when circles have spawned
                 resetCircleSpawnTimer();
             } else{
                 gameState = NO_MORE_CIRCLES;
             }
         }
+    }
 
+    private void showInfoWhenCirclesHaveSpawned(){
+        switch (circleCount){
+            case 1:
+                //1st circle has spawned (it's pink)
+                //'PINK objects go in the PINK area'
+                //reviving the informational string objects with the appropriate information
+                infoA.revive("PINK",StringObject.PINK_NUM);
+                infoB.revive("objects go in the");
+                infoC.revive("PINK",StringObject.PINK_NUM);
+                infoD.revive("area");
+                //adding these revived informational string objects to aliveHUD
+                aliveHUD.addAll(informationalStringObjects);
+                break;
+            case 2:
+                //2nd circle has spawned (it's blue)
+                //'BLUE objects go in the BLUE area'
+                // only infoA and infoC need to change (infoB and infoD unchanged)
+                infoA.setTextAndPredefinedColour("BLUE",StringObject.BLUE_NUM);
+                infoC.setTextAndPredefinedColour("BLUE",StringObject.BLUE_NUM);
+                break;
+            case 3:
+                //3rd circle has spawned (it's yellow)
+                //'There is only PINK and BLUE' (obvious irony is obvious)
+                infoA.setTextAndPredefinedColour("There is only",StringObject.WHITE_NUM);
+                infoB.setTextAndPredefinedColour("PINK",StringObject.PINK_NUM);
+                infoC.setTextAndPredefinedColour("and",StringObject.WHITE_NUM);
+                infoD.setTextAndPredefinedColour("BLUE",StringObject.BLUE_NUM);
+                break;
+            case 4:
+                //'things that are PINK are always PINK' (ps this is also incorrect)
+                //(don't need to change infoB)
+                infoA.setText("Things that are");
+                infoC.setText("are always");
+                infoD.revive("PINK",StringObject.PINK_NUM);
+                break;
+            case 5:
+                //'things that are BLUE are always BLUE' (incorrect as well)
+                //only need to change infoB and infoD
+                infoB.setTextAndPredefinedColour("BLUE",StringObject.BLUE_NUM);
+                infoD.setTextAndPredefinedColour("BLUE",StringObject.BLUE_NUM);
+                break;
+            case 6:
+                //'This system is perfect' (wrong.)
+                //all change
+                infoA.setText("This");
+                infoB.setTextAndPredefinedColour("system",StringObject.WHITE_NUM);
+                infoC.setText("is");
+                infoD.setTextAndPredefinedColour("perfect.",StringObject.WHITE_NUM);
+                break;
+            case 7:
+                //'It has no flaws.' (objectively wrong)
+                infoA.setText("It");
+                infoB.setText("has");
+                infoC.setText("no");
+                infoD.setText("flaws.");
+                break;
+            case 8:
+                //'Now, sort them all!' (more of a command than an assertation I guess)
+                infoA.setText("Now,");
+                infoB.setText("sort");
+                infoC.setText("them");
+                infoD.setText("all!");
+                break;
+            case 9:
+                //gets rid of the informational string objects, aren't needed any more
+                for(StringObject s: informationalStringObjects){
+                    s.kill();
+                }
+                break;
+            default:
+                //nothing for default case
+                break;
+        }
     }
 
     //Waiting for all the circles to stop moving

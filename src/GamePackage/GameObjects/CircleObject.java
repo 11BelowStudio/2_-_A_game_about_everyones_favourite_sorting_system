@@ -8,13 +8,6 @@ import java.io.IOException;
 
 public class CircleObject extends GameObject {
 
-    static final Color PINK_COLOUR = new Color(245, 171, 185);
-    static final Color BLUE_COLOUR = new Color(91,207,250);
-    static final Color YELLOW_COLOUR = new Color(255,216,0);
-    static final Color PURPLE_COLOUR = new Color(156,92,212);
-
-    private static final int CIRCLE_DIAMETER = 64;
-    private static final int CIRCLE_RADIUS = CIRCLE_DIAMETER/2;
 
     private static final int DEFAULT_SPEED = 96;
     private static final double SPEED_INCREMENT = 0.1;

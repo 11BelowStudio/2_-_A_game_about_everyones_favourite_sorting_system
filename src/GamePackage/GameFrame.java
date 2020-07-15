@@ -12,7 +12,7 @@ public class GameFrame extends JFrame {
     private Component comp;
 
     public GameFrame() {
-        this.setTitle("2: A Game About Society's Favourite Sorting System");
+        this.setTitle("2 - A Game About Everyone's Favourite Sorting System!");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 

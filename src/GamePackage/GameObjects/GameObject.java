@@ -27,9 +27,8 @@ public abstract class GameObject {
 
     int radius;
 
-    static final int OBJ_RADIUS = 32;
-    static final int OBJ_X_BOUNDS = Constants.GAME_WIDTH - OBJ_RADIUS;
-    static final int OBJ_Y_BOUNDS = Constants.GAME_HEIGHT - OBJ_RADIUS;
+    static final int CIRCLE_DIAMETER = 64;
+    static final int CIRCLE_RADIUS = CIRCLE_DIAMETER/2;
 
     static final int BUTTON_MAX_SPEED = 300;
 
@@ -45,6 +44,11 @@ public abstract class GameObject {
     //safety purple: #964f8e
     static final Color SAFETY_PURPLE = new Color(150, 79, 142);
 
+
+    static final Color PINK_COLOUR = new Color(245, 171, 185);
+    static final Color BLUE_COLOUR = new Color(91,207,250);
+    static final Color YELLOW_COLOUR = new Color(255,216,0);
+    static final Color PURPLE_COLOUR = new Color(156,92,212);
 
 
 
@@ -78,7 +82,7 @@ public abstract class GameObject {
     abstract void individualUpdate();
 
     void amIAlive(){
-        /* probably going to have a countdown timer for the ButtonObjects */
+        /* overridden by certain gameObjects to double-check that they're still alive */
     }
 
     abstract void keepInBounds();
@@ -107,11 +111,6 @@ public abstract class GameObject {
         return objectColour;
     }
 
-    static Vector2D randomPosInObjBounds(){
-        return new Vector2D(
-                OBJ_RADIUS + (Math.random()* OBJ_X_BOUNDS),
-                OBJ_RADIUS + (Math.random()* OBJ_Y_BOUNDS)
-        );
-    }
+
 
 }

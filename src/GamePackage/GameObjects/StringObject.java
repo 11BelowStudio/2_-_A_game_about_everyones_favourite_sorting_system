@@ -18,7 +18,12 @@ public class StringObject extends GameObject {
 
     boolean scrolling;
 
-
+    private int currentPredefinedColour;
+    public static final int WHITE_NUM = 0;
+    public static final int PINK_NUM = 1;
+    public static final int BLUE_NUM = 2;
+    public static final int YELLOW_NUM = 3;
+    public static final int PURPLE_NUM = 4;
 
 
     private Rectangle areaRectangle;
@@ -57,7 +62,9 @@ public class StringObject extends GameObject {
         height = 0;
         alignment = 0;
         thisString = "";
-        objectColour = Color.WHITE;
+
+        //objectColour = Color.WHITE;
+        setPredefinedColour(WHITE_NUM);
         theFont = SANS;
         areaRectangle = new Rectangle();
         scrolling = false;
@@ -78,6 +85,7 @@ public class StringObject extends GameObject {
     @Override
     public StringObject revive(Vector2D p, Vector2D v) {
         super.revive(p,v);
+        setPredefinedColour(WHITE_NUM);
         return this;
     }
 
@@ -92,12 +100,62 @@ public class StringObject extends GameObject {
         return setText(s);
     }
 
+    //version of revive() encapsulating setTextAndPredefinedColour()
+    public StringObject revive(String newText, int definedColourValue){
+        revive();
+        setTextAndPredefinedColour(newText, definedColourValue);
+        return this;
+    }
+
     public boolean isClicked(Point p){
         return (areaRectangle.contains(p));
     }
 
     void setTheFont(Font f){
         theFont = f;
+    }
+
+
+    public void setPredefinedColour(int definedColourValue){
+        currentPredefinedColour = definedColourValue;
+        setColourToPredefinedColour();
+    }
+
+    public void cycleColours(){
+        //used for cycling through the predefined colours
+        currentPredefinedColour++;
+        currentPredefinedColour = currentPredefinedColour % 5;
+        //ensures it's in range 0-4 (within valid predefined colours)
+        setColourToPredefinedColour();
+    }
+
+    private void setColourToPredefinedColour(){
+        switch (currentPredefinedColour){
+            case PINK_NUM:
+                objectColour = PINK_COLOUR;
+                break;
+            case BLUE_NUM:
+                objectColour = BLUE_COLOUR;
+                break;
+            case YELLOW_NUM:
+                objectColour = YELLOW_COLOUR;
+                break;
+            case PURPLE_NUM:
+                objectColour = PURPLE_COLOUR;
+                break;
+            default:
+                //if predefined value is not recognized, it's set to the white value
+                currentPredefinedColour = WHITE_NUM;
+                //no break here, so it will then set the object colour to white
+            case WHITE_NUM:
+                objectColour = Color.WHITE;
+                break;
+        }
+    }
+
+    public void setTextAndPredefinedColour(String newText, int definedColourValue){
+        setText(newText);
+        setPredefinedColour(definedColourValue);
     }
 
     public void setColour(Color c){ objectColour = c;}

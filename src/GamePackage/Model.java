@@ -14,13 +14,13 @@ public abstract class Model {
     final List<StringObject> hudObjects;
     final List<SorterObject> sorterObjectList;
     final List<CircleObject> circleObjects;
-    final List<BackgroundAreaObject> backgroundObjects;
+    final List<GameObject> backgroundObjects;
 
 
     final List<StringObject> aliveHUD;
     final List<SorterObject> aliveSorterList;
     final List<CircleObject> aliveCircleObjects;
-    final List<BackgroundAreaObject> aliveBackground;
+    final List<GameObject> aliveBackground;
 
 
     //final Stack<BackgroundRippleObject> ripples;

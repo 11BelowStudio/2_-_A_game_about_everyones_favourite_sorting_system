@@ -15,16 +15,25 @@ public class SorterObject extends GameObject {
     //at middle bottom of game area
     //400, 524 is midpoint
 
-    private static double MIDPOINT_X = 400;
-    private static double MIDPOINT_Y = 524;
-    private static int IMG_WIDTH = 160;
-    private static int IMG_HALF_WIDTH = IMG_WIDTH/2;
-    private static int IMG_HEIGHT = 152;
-    private static int IMG_HALF_HEIGHT = IMG_HEIGHT/2;
+    private static final double MIDPOINT_X = 400;
+    private static final double MIDPOINT_Y = 524;
+    private static final int IMG_WIDTH = 160;
+    private static final int IMG_HALF_WIDTH = IMG_WIDTH/2;
+    private static final int IMG_HEIGHT = 152;
+    private static final int IMG_HALF_HEIGHT = IMG_HEIGHT/2;
 
-    private Controller ctrl;
+
+    private final Controller ctrl;
 
     boolean destIsBlue; //true if sending to blue, false if sending to pink
+
+    boolean hasSwapped;
+
+    //TODO: spritesheets. (seperate pink and blue spritesheet, 4 frames on each)
+    //TODO: array of the co-ordinates for each sprite in the spritesheets
+
+    private int currentFrame;
+    //will be used to get the correct data from the spritesheet co-ordinate array when it comes to drawing them
 
     private static Image BLUE_SPRITE, PINK_SPRITE;
     static{
@@ -45,6 +54,9 @@ public class SorterObject extends GameObject {
     void individualUpdate() {
         Action currentAction = ctrl.getAction();
 
+        currentFrame++; //update spritesheet frame
+        currentFrame = currentFrame % 4; //only values 0-3 are valid, ensures that the value is valid
+
         //state will change to opposite state if the spacebar has been pressed
         if (currentAction.checkForSpacePress()){
             if (destIsBlue){
@@ -54,6 +66,7 @@ public class SorterObject extends GameObject {
                 img = BLUE_SPRITE;
                 destIsBlue = true;
             }
+            hasSwapped=true;
         }
 
     }
@@ -63,6 +76,7 @@ public class SorterObject extends GameObject {
         super.revive();
         img = BLUE_SPRITE;
         destIsBlue = true;
+        hasSwapped = false;
         return this;
     }
 
@@ -72,11 +86,19 @@ public class SorterObject extends GameObject {
 
     @Override
     void renderObject(Graphics2D g) {
+        //TODO: spritesheet stuff
         g.drawImage(img,-IMG_HALF_WIDTH,-IMG_HALF_HEIGHT,null);
     }
 
-    public boolean checkIfSendingToBlue(){
-        return destIsBlue;
-    }
+    public boolean checkIfSendingToBlue(){ return destIsBlue; }
+
+    public boolean checkForFirstSwap(){ return hasSwapped; }
+    /*
+    basically this is required by the Game class to check for the first space press
+    as trying ctrl.checkForSpacePress() fails there,
+    as the check for space press in this object's update() will have already set space to false if it was true,
+    meaning that 'hasSwapped' is needed to record if there has been a single space press since this object was revived
+     */
+
 
 }
