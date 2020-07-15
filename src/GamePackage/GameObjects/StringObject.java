@@ -170,7 +170,7 @@ public class StringObject extends GameObject {
             FontMetrics metrics = g.getFontMetrics(g.getFont());
             int w = metrics.stringWidth(thisString);
             int h = metrics.getHeight();
-            int heightOffset = (int)(-h/2);
+            int heightOffset = (-h/2);
             int widthOffset;
             switch (alignment){
                 default:
