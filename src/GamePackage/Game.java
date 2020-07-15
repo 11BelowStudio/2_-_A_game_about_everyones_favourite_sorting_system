@@ -186,13 +186,19 @@ public class Game extends Model{
         }
 
 
-        //the first 3 circles to spawn will be (cis) pink, (cis) blue, and yellow
+        //the types of the first 5 circles are predefined, for artistic reasons
         circleTypes.add(SortedCircleObject.PINK_CIRCLE);
+            //player told pink goes into pink, so here's a pink one
         circleTypes.add(SortedCircleObject.BLUE_CIRCLE);
+            //player told blue goes into blue, so here's a blue one
         circleTypes.add(SortedCircleObject.YELLOW_CIRCLE);
-
-        //remaining 37 will be random values of 0, 1, 2, 3, 4, 5, and 6 (the enumerated types of values).
-        for (int i = 0; i < 37 ; i++) {
+            //player told there is only pink and blue, so fuck you here's a yellow one.
+        circleTypes.add(SortedCircleObject.BLUE_FROM_PINK);
+            //player told that pink objects remain pink, so fuck you here's one that looks pink at first but isn't pink
+        circleTypes.add(SortedCircleObject.PINK_FROM_BLUE);
+            //player told that blue objects remain blue, so fuck you here's one that looks blue at first but isn't blue
+        //remaining 35 will be random values of 0, 1, 2, 3, 4, 5, and 6 (the enumerated types of values).
+        for (int i = 0; i < 35 ; i++) {
             circleTypes.add((int)(Math.random()*7));
         }
 
@@ -420,11 +426,11 @@ public class Game extends Model{
                 infoD.setText("flaws.");
                 break;
             case 8:
-                //'Now, sort them all!' (more of a command than an assertation I guess)
-                infoA.setText("Now,");
-                infoB.setText("sort");
-                infoC.setText("them");
-                infoD.setText("all!");
+                //'It's impossible to get it wrong.' (yet another completely wrong assertation)
+                infoA.setText("It's");
+                infoB.setText("impossible");
+                infoC.setText("to get it");
+                infoD.setText("wrong.");
                 break;
             case 9:
                 //gets rid of the informational string objects, aren't needed any more
