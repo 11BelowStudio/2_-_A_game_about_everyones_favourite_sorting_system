@@ -13,13 +13,13 @@ public abstract class Model {
 
     final List<StringObject> hudObjects;
     final List<SorterObject> sorterObjectList;
-    final List<CircleObject> circleObjects;
+    final List<SortedCircleObject> sortCircleObjects;
     final List<GameObject> backgroundObjects;
 
 
     final List<StringObject> aliveHUD;
     final List<SorterObject> aliveSorterList;
-    final List<CircleObject> aliveCircleObjects;
+    final List<SortedCircleObject> aliveSortCircleObjects;
     final List<GameObject> aliveBackground;
 
 
@@ -60,12 +60,12 @@ public abstract class Model {
 
         hudObjects = new ArrayList<>();
         sorterObjectList = new ArrayList<>();
-        circleObjects = new ArrayList<>();
+        sortCircleObjects = new ArrayList<>();
         backgroundObjects = new ArrayList<>();
 
         aliveHUD = new ArrayList<>();
         aliveSorterList = new ArrayList<>();
-        aliveCircleObjects = new ArrayList<>();
+        aliveSortCircleObjects = new ArrayList<>();
         aliveBackground = new ArrayList<>();
 
         //ripples = new Stack<>();
@@ -88,11 +88,11 @@ public abstract class Model {
             }
             for (GameObject o : sorterObjectList) {
                 o.draw(g);
-                //draws sorter
+                //draws sorter objects
             }
-            for (GameObject o : circleObjects){
+            for (GameObject o : sortCircleObjects){
                 o.draw(g);
-                //draws each circle
+                //draws each sortCircleObject
             }
             for (GameObject o : hudObjects) {
                 o.draw(g);
@@ -110,15 +110,15 @@ public abstract class Model {
             sorterObjectList.clear();
             sorterObjectList.addAll(aliveSorterList);
 
-            circleObjects.clear();
-            circleObjects.addAll(aliveCircleObjects);
+            sortCircleObjects.clear();
+            sortCircleObjects.addAll(aliveSortCircleObjects);
 
             hudObjects.clear();
             hudObjects.addAll(aliveHUD);
         }
         aliveBackground.clear();
         aliveSorterList.clear();
-        aliveCircleObjects.clear();
+        aliveSortCircleObjects.clear();
         aliveHUD.clear();
     }
 
@@ -158,7 +158,7 @@ public abstract class Model {
 
         backgroundObjects.clear();
         sorterObjectList.clear();
-        aliveCircleObjects.clear();
+        aliveSortCircleObjects.clear();
         hudObjects.clear();
 
     }

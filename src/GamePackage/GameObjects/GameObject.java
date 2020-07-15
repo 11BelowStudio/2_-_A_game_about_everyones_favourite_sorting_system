@@ -85,7 +85,9 @@ public abstract class GameObject {
         /* overridden by certain gameObjects to double-check that they're still alive */
     }
 
-    abstract void keepInBounds();
+    void keepInBounds(){
+        /* overridden by certain gameObjects to double-check that they're still in bounds (left unused/empty by others) */
+    }
 
 
     public void draw(Graphics2D g){
@@ -99,17 +101,11 @@ public abstract class GameObject {
 
     public boolean stillAlive(){ return alive; }
 
-    public Vector2D getPos(){
-        return position;
-    }
+    public Vector2D getPos(){ return position; }
 
-    public int getRadius(){
-        return radius;
-    }
+    public int getRadius(){ return radius; }
 
-    public Color getObjectColour(){
-        return objectColour;
-    }
+    public Color getObjectColour(){ return objectColour; }
 
 
 

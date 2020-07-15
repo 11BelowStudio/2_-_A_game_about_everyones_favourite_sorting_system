@@ -1,7 +1,6 @@
 package GamePackage;
 
 import GamePackage.GameObjects.*;
-import utilities.SoundManager;
 import utilities.Vector2D;
 
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ public class Game extends Model{
 
     //private final AttributeStringObject<Integer> scoreText;
 
-    private final Stack<CircleObject> circleStack;
+    private final Stack<SortedCircleObject> circleStack;
     private final List<Integer> circleTypes;
 
     private final BlueBackgroundArea blueArea;
@@ -186,7 +185,7 @@ public class Game extends Model{
             aliveSorterList.add(o);
         }
 
-        for (CircleObject o: circleObjects){
+        for (SortedCircleObject o: sortCircleObjects){
             o.update();
             if (o.checkIfThisIsWaitingToBeSorted()){
 
@@ -196,7 +195,7 @@ public class Game extends Model{
                     o.setDestination(pinkArea.getDestination(),false);
                 }
             }
-            aliveCircleObjects.add(o);
+            aliveSortCircleObjects.add(o);
         }
 
         //keeping backgroundareaobjects active
@@ -236,7 +235,7 @@ public class Game extends Model{
                 countOnThisFrame = ! countOnThisFrame; //flips this boolean value (so it only tries to count every other frame)
                 if (countOnThisFrame){
                     //obtains the circle object which is being counted (at the index of aliveCircleObjects which the cursor points to)
-                    CircleObject objectWhatIsBeingCounted = aliveCircleObjects.get(correctCountCursor);
+                    SortedCircleObject objectWhatIsBeingCounted = aliveSortCircleObjects.get(correctCountCursor);
 
                     //performs the 'isThisCorrect()' operation on it
                     if (objectWhatIsBeingCounted.isThisCorrect()){
@@ -245,7 +244,7 @@ public class Game extends Model{
                     }
                     //puts this object back in the aliveCircleObjects list
                         // (replacing the version of it which hasn't had the isThisCorrect() operation performed on it)
-                    aliveCircleObjects.set(correctCountCursor,objectWhatIsBeingCounted);
+                    aliveSortCircleObjects.set(correctCountCursor,objectWhatIsBeingCounted);
 
                     //increments the cursor for the correct count
                     correctCountCursor++;
@@ -287,14 +286,14 @@ public class Game extends Model{
 
         //pushes 40 CircleObjects to the circleStack
         for (int i = 0; i < 40; i++) {
-            circleStack.add(new CircleObject());
+            circleStack.add(new SortedCircleObject());
         }
 
 
         //the first 3 circles to spawn will be (cis) pink, (cis) blue, and yellow
-        circleTypes.add(CircleObject.PINK_CIRCLE);
-        circleTypes.add(CircleObject.BLUE_CIRCLE);
-        circleTypes.add(CircleObject.YELLOW_CIRCLE);
+        circleTypes.add(SortedCircleObject.PINK_CIRCLE);
+        circleTypes.add(SortedCircleObject.BLUE_CIRCLE);
+        circleTypes.add(SortedCircleObject.YELLOW_CIRCLE);
 
         //remaining 37 will be random values of 0, 1, 2, 3, 4, 5, and 6 (the enumerated types of values).
         for (int i = 0; i < 37 ; i++) {
@@ -394,9 +393,9 @@ public class Game extends Model{
     private void reviveACircleObject(){
         //get current circle count
         //obtain integer at appropriate index from circleTypes
-        //pop top CircleObject from circleStack, revive with that data, push to aliveCircles
+        //pop top SortedCircleObject from circleStack, revive with that data, push to aliveCircles
         if (canWeSpawnACircle()) {
-            aliveCircleObjects.add(circleStack.pop().revive(circleTypes.get(circleCount),circleCount));
+            aliveSortCircleObjects.add(circleStack.pop().revive(circleTypes.get(circleCount),circleCount));
             if (canWeSpawnACircle()) {
                 circleCount++;
                 showInfoWhenCirclesHaveSpawned(); //shows the appropriate info when circles have spawned
@@ -484,7 +483,7 @@ public class Game extends Model{
 
     //Waiting for all the circles to stop moving
     private boolean areTheCirclesDoneYet(){
-        for (CircleObject c: aliveCircleObjects) {
+        for (SortedCircleObject c: aliveSortCircleObjects) {
             if (c.isItStillMoving()){
                 //they are not done yet if one of them is still moving
                 return false;

@@ -315,6 +315,11 @@ public final class Vector2D {
         return new Vector2D(mag*Math.cos(angle),mag*Math.sin(angle));
     }
 
+    //like polar for situations where a random angle is needed instead of a given angle
+    public static Vector2D polarWithRandomAngle(double mag){
+        return Vector2D.polar(Math.random()*(2*Math.PI),mag);
+    }
+
     //rotation needed to get from this vector's angle to targetVector's angle
     public double getAngleTo(Vector2D targetVector){
         double xAngle = targetVector.x - x;
