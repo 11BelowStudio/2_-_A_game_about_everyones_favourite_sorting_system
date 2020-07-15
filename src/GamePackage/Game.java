@@ -100,7 +100,7 @@ public class Game extends Model{
                 0,
                 "/40",
                 StringObject.MIDDLE_ALIGN,
-                StringObject.BIG_SANS
+                StringObject.SANS_50
         );
 
         pressSpaceText = new StringObject(
@@ -108,7 +108,7 @@ public class Game extends Model{
                 new Vector2D(),
                 "Press space to sort",
                 StringObject.MIDDLE_ALIGN,
-                StringObject.BIG_SANS
+                StringObject.SANS_50
         );
 
         informationalStringObjects = new ArrayList<>();
@@ -117,28 +117,28 @@ public class Game extends Model{
                 new Vector2D(),
                 "",
                 StringObject.MIDDLE_ALIGN,
-                StringObject.BIG_SANS
+                StringObject.SANS_50
         );
         infoB = new StringObject(
                 new Vector2D(HALF_WIDTH,HALF_HEIGHT-32),
                 new Vector2D(),
                 "",
                 StringObject.MIDDLE_ALIGN,
-                StringObject.BIG_SANS
+                StringObject.SANS_50
         );
         infoC = new StringObject(
                 new Vector2D(HALF_WIDTH,HALF_HEIGHT+32),
                 new Vector2D(),
                 "",
                 StringObject.MIDDLE_ALIGN,
-                StringObject.BIG_SANS
+                StringObject.SANS_50
         );
         infoD = new StringObject(
                 new Vector2D(HALF_WIDTH,HALF_HEIGHT+96),
                 new Vector2D(),
                 "",
                 StringObject.MIDDLE_ALIGN,
-                StringObject.BIG_SANS
+                StringObject.SANS_50
         );
         informationalStringObjects.add(infoA);
         informationalStringObjects.add(infoB);
@@ -162,120 +162,16 @@ public class Game extends Model{
         return this;
     }
 
-    void startModelMusic(){ }
-
-    void stopModelMusic(){
-
+    void startModelMusic(){
+        //add music
     }
 
-    @Override
-    void updateLoop() {
-        //buttonCountChanged = false;
-
-
-        /*
-        if (stillInCutscene){
-            cutsceneHandler();
-        }
-         */
-
-        //updating sorter
-        for (SorterObject o: sorterObjectList){
-            o.update();
-            aliveSorterList.add(o);
-        }
-
-        for (SortedCircleObject o: sortCircleObjects){
-            o.update();
-            if (o.checkIfThisIsWaitingToBeSorted()){
-
-                if (sorter.checkIfSendingToBlue()){
-                    o.setDestination(blueArea.getDestination(),true);
-                } else{
-                    o.setDestination(pinkArea.getDestination(),false);
-                }
-            }
-            aliveSortCircleObjects.add(o);
-        }
-
-        //keeping backgroundareaobjects active
-        for (GameObject o: backgroundObjects){
-            o.update();
-            aliveBackground.add(o);
-        }
-
-
-        //now that the main game objects have been updated and such, it's time to do the special update operations for the current gamestate
-        switch (gameState){
-            case WAITING_TO_START:
-                if(sorter.checkForFirstSwap()){
-                    pressSpaceText.kill();
-                    gameState = CIRCLES_SPAWNING;
-                }
-                break;
-            case CIRCLES_SPAWNING:
-                circleSpawnHandler();
-                break;
-            case NO_MORE_CIRCLES:
-                if(areTheCirclesDoneYet()){
-                    //will proceed to count correct circles if the circles are done moving
-                    gameState = COUNTING_CORRECT_CIRCLES;
-
-                    //initialising counting stuff
-                    correctCount = 0; //0 correct at first
-                    correctCountText.setSuffix("/40"); //ensuring that there's a '/40' at the end of the correct count thing
-                    aliveHUD.add(correctCountText.revive(correctCount));
-                    correctCountCursor = 0;
-                    //starts at 0
-                    countOnThisFrame = false;
-                    //counts every other frame (25 counted per second) so it's actually possible to see them being counted
-                }
-                break;
-            case COUNTING_CORRECT_CIRCLES:
-                countOnThisFrame = ! countOnThisFrame; //flips this boolean value (so it only tries to count every other frame)
-                if (countOnThisFrame){
-                    //obtains the circle object which is being counted (at the index of aliveCircleObjects which the cursor points to)
-                    SortedCircleObject objectWhatIsBeingCounted = aliveSortCircleObjects.get(correctCountCursor);
-
-                    //performs the 'isThisCorrect()' operation on it
-                    if (objectWhatIsBeingCounted.isThisCorrect()){
-                        //increments the correct count if it's correct
-                        incrementCorrectCount();
-                    }
-                    //puts this object back in the aliveCircleObjects list
-                        // (replacing the version of it which hasn't had the isThisCorrect() operation performed on it)
-                    aliveSortCircleObjects.set(correctCountCursor,objectWhatIsBeingCounted);
-
-                    //increments the cursor for the correct count
-                    correctCountCursor++;
-
-                    //no more correct count stuff if all of them have been counted (cursor at 40)
-                    if (correctCountCursor == 40){
-                        gameState = ALL_DONE;
-                    }
-                }
-                break;
-            case ALL_DONE:
-                if (ctrl.getTheAnyButton()){
-                    endThis();
-                }
-                break;
-        }
-
-        //finally updates the hudObjects (in case they got modified earlier on)
-        for (StringObject o: hudObjects){
-            o.update();
-            if (o.stillAlive()){
-                aliveHUD.add(o);
-            }
-        }
+    void stopModelMusic(){
+        //stop the music at the appropriate time
     }
 
     @Override
     void setupModel() {
-        //clears existing collections
-        clearCollections();
-
 
         //sets the gamestate to 'WAITING_TO_START'
         gameState = WAITING_TO_START;
@@ -310,23 +206,9 @@ public class Game extends Model{
         //the 'press space to sort' text is revived, added to AliveHUD so it's visible
         aliveHUD.add(pressSpaceText.revive());
 
-
-
-        //updateScoreDisplay();
-
-        //setMultiplierDisplay(multiplier);
-
-        //currentCircleSpawnDelay = 0;
-        //circleSpawnTimer = 0;
-
-        //reviveACircleObject();
-
         currentCircleSpawnDelay = MAX_CIRCLE_SPAWN_TIME;
-        circleSpawnTimer = 0;
-
-        //aliveHUD.add(scoreText.revive());
-        //aliveHUD.add(multiplierText.revive());
-
+        circleSpawnTimer = 1; //circle spawning logic always decrements the timer by 1 before checking it
+        //setting timer to 1 ensures circle will spawn on frame 1
 
     }
 
@@ -342,71 +224,142 @@ public class Game extends Model{
         }
     }
 
+    @Override
+    void updateLoop() {
 
-    /*
-    private void updateMultiplier(){
-        double newMultiplier = 0.8 + (0.1 * activeButtonCount);
-        multiplier = Math.round(newMultiplier * 10)/10.0;
-        setMultiplierDisplay(multiplier);
-    }
 
-    private void setMultiplierDisplay(double valueToShow){
-        multiplierText.showValue(valueToShow);
-    }
-
-    private void updateScoreDisplay(){
-        scoreText.showValue(scoreToInt());
-    }
-
-    private int scoreToInt(){
-        return (int)score;
-    }
-
-    private void reviveRipple(ButtonObject sourceButton){
-        if (canWeSpawnARipple()){
-            aliveBackground.add(ripples.pop().revive(sourceButton));
+        //updating sorter
+        for (SorterObject o: sorterObjectList){
+            o.update();
+            aliveSorterList.add(o);
         }
-    }
-     */
 
-
-    //CIRCLE SPAWNING METHODS
-    private void circleSpawnHandler(){
-        if (circleSpawnTimer == 0){
-            reviveACircleObject();
-        } else{
-            circleSpawnTimer--;
+        //updating sortCircleObjects
+        for (SortedCircleObject o: sortCircleObjects){
+            o.update();
+            if (o.checkIfThisIsWaitingToBeSorted()){
+                //if it's waiting to be sorted, it is sent in the direction of the sorter.
+                if (sorter.checkIfSendingToBlue()){
+                    o.setDestination(blueArea.getDestination(),true);
+                } else{
+                    o.setDestination(pinkArea.getDestination(),false);
+                }
+            }
+            aliveSortCircleObjects.add(o);
         }
-    }
 
-    private void resetCircleSpawnTimer(){
-        if (currentCircleSpawnDelay > MIN_CIRCLE_SPAWN_TIME){
-            currentCircleSpawnDelay -= CIRCLE_SPAWN_TIME_DECREMENT;
+        //keeping backgroundareaobjects active
+        for (GameObject o: backgroundObjects){
+            o.update();
+            aliveBackground.add(o);
         }
-        circleSpawnTimer = currentCircleSpawnDelay;
-    }
 
-    private boolean canWeSpawnACircle(){
-        return (!circleStack.isEmpty());
-    }
 
-    private void reviveACircleObject(){
-        //get current circle count
-        //obtain integer at appropriate index from circleTypes
-        //pop top SortedCircleObject from circleStack, revive with that data, push to aliveCircles
-        if (canWeSpawnACircle()) {
-            aliveSortCircleObjects.add(circleStack.pop().revive(circleTypes.get(circleCount),circleCount));
-            if (canWeSpawnACircle()) {
-                circleCount++;
-                showInfoWhenCirclesHaveSpawned(); //shows the appropriate info when circles have spawned
-                resetCircleSpawnTimer();
-            } else{
-                gameState = NO_MORE_CIRCLES;
+        //now that the main game objects have been updated and such, it's time to do the special update operations for the current gamestate
+        switch (gameState){
+            case WAITING_TO_START:
+                waitingToStartLogic();
+                break;
+            case CIRCLES_SPAWNING:
+                circleSpawningLogic();
+                break;
+            case NO_MORE_CIRCLES:
+                noMoreCirclesLogic();
+                break;
+            case COUNTING_CORRECT_CIRCLES:
+                correctCountLogic();
+                break;
+            case ALL_DONE:
+                allDoneLogic();
+                break;
+        }
+
+        //finally updates the hudObjects (in case they got modified earlier on)
+        for (StringObject o: hudObjects){
+            o.update();
+            if (o.stillAlive()){
+                aliveHUD.add(o);
             }
         }
     }
 
-    private void showInfoWhenCirclesHaveSpawned(){
+    // ------ GAMESTATE-RELATED LOGIC
+
+    // ------- WAITING_TO_START ----------
+
+    //Wrapper for this state
+    private void waitingToStartLogic(){
+        if(sorter.checkForFirstSwap()){
+            wts_moveToNextStateLogic();
+        }
+    }
+
+    //Logic for moving to the next state
+    private void wts_moveToNextStateLogic(){
+        pressSpaceText.kill();
+            //the pressSpaceText is no longer needed
+        gameState = CIRCLES_SPAWNING;
+            //now in CIRCLES_SPAWNING state
+    }
+
+
+    // ------------- CIRCLES_SPAWNING --------------
+
+    //Wrapper for this state
+    private void circleSpawningLogic(){
+        circleSpawnTimer--; //timer counts down
+
+        //checks if the circle spawn timer has expired
+        if (circleSpawnTimer <= 0){
+            //revives a circle object and resets the spawn timer if the timer has expired
+            cs_reviveACircleObject();
+            cs_resetCircleSpawnTimer();
+        }
+    }
+
+    //resetting the spawn timer
+    private void cs_resetCircleSpawnTimer(){
+        if (currentCircleSpawnDelay > MIN_CIRCLE_SPAWN_TIME){
+            currentCircleSpawnDelay -= CIRCLE_SPAWN_TIME_DECREMENT;
+            //the delay until the next circle spawning will be decremented if it's longer than the minimum delay
+        }
+        //timer is reset to what the current value of the delay is
+        circleSpawnTimer = currentCircleSpawnDelay;
+    }
+
+
+    //revives a circle object
+    private void cs_reviveACircleObject(){
+        //checks to see if there actually is anything left in the circleStack
+        if (cs_checkIfMoreCirclesNeedToSpawn()) { //if there's stuff left
+            //get current circle count
+            //obtain integer at appropriate index from circleTypes
+            //pop top SortedCircleObject from circleStack, revive with that data, push to aliveCircles
+            aliveSortCircleObjects.add(circleStack.pop().revive(circleTypes.get(circleCount),circleCount));
+
+            circleCount++; //circleCount incremented
+
+            //double-checks if there's anything left in the circleStack
+            if (cs_checkIfMoreCirclesNeedToSpawn()) {
+                //handle stuff to do with displaying/changing/hiding the info text during the CIRCLES_SPAWNING state
+                cs_showInfoWhenCirclesHaveSpawned();
+            } else{
+                //moves to the next state if circleStack is now empty
+                cs_moveToNextStateLogic();
+            }
+        } else{
+            //moves to the next state if circleStack is empty but somehow nobody realized that it was empty
+            cs_moveToNextStateLogic();
+        }
+    }
+
+    private boolean cs_checkIfMoreCirclesNeedToSpawn(){
+        //returns the inverse of circleStack.isEmpty (so basically true if there's stuff left in it)
+        return (!circleStack.isEmpty());
+    }
+
+    private void cs_showInfoWhenCirclesHaveSpawned(){
+        //displays/changes/hides text shown to the player at certain circleCounts
         switch (circleCount){
             case 1:
                 //1st circle has spawned (it's pink)
@@ -481,8 +434,24 @@ public class Game extends Model{
         }
     }
 
-    //Waiting for all the circles to stop moving
-    private boolean areTheCirclesDoneYet(){
+    //simply moves to the NO_MORE_CIRCLES state
+    private void cs_moveToNextStateLogic(){
+        gameState = NO_MORE_CIRCLES;
+    }
+
+
+    // ------------ NO_MORE_CIRCLES --------------------
+
+    //wrapper function
+    private void noMoreCirclesLogic(){
+        if(nmc_checkIfAllCirclesHaveStopped()){
+            //will proceed to count correct circles if the circles are done moving
+            nmc_moveToNextStateLogic();
+        }
+    }
+
+    //Checks to see if all the circles have stopped moving
+    private boolean nmc_checkIfAllCirclesHaveStopped(){
         for (SortedCircleObject c: aliveSortCircleObjects) {
             if (c.isItStillMoving()){
                 //they are not done yet if one of them is still moving
@@ -490,100 +459,73 @@ public class Game extends Model{
             }
         }
         return true;
+        //true only if none of them were still moving
     }
 
-    //Counting correct circles
-    private void incrementCorrectCount(){
+    //finishes the 'no more circles' logic, sets up stuff for the 'COUNTING_CORRECT_CIRCLES' state
+    private void nmc_moveToNextStateLogic(){
+        gameState = COUNTING_CORRECT_CIRCLES;
+
+        //initialising counting stuff
+        correctCount = 0; //0 correct at first
+        correctCountText.setSuffix("/40"); //ensuring that there's a '/40' at the end of the correct count thing
+        aliveHUD.add(correctCountText.revive(correctCount));
+        correctCountCursor = 0;
+        //starts at 0
+        countOnThisFrame = false;
+        //counts every other frame (25 counted per second) so it's actually possible to see them being counted
+    }
+
+
+    // ---------------- COUNTING_CORRECT_CIRCLES -------------------
+
+    //Wrapper function
+    private void correctCountLogic(){
+        countOnThisFrame = ! countOnThisFrame; //flips this boolean value (so it only tries to count every other frame)
+        if (countOnThisFrame){
+            //obtains the circle object which is being counted (at the index of aliveCircleObjects which the cursor points to)
+            SortedCircleObject objectWhatIsBeingCounted = aliveSortCircleObjects.get(correctCountCursor);
+
+            //performs the 'isThisCorrect()' operation on it
+            if (objectWhatIsBeingCounted.isThisCorrect()){
+                //increments the correct count if it's correct
+                ccc_incrementCorrectCount();
+            }
+            //puts this object back in the aliveCircleObjects list
+            // (replacing the version of it which hasn't had the isThisCorrect() operation performed on it)
+            aliveSortCircleObjects.set(correctCountCursor,objectWhatIsBeingCounted);
+
+            //increments the cursor for the correct count
+            correctCountCursor++;
+
+            //no more correct count stuff if all of them have been counted (cursor at 40)
+            if (correctCountCursor == 40){
+                ccc_moveToNextStateLogic();
+            }
+        }
+    }
+
+    //Increments the correctCount value and updates correctCountText accordingly
+    private void ccc_incrementCorrectCount(){
         correctCount++;
         correctCountText.setValue(correctCount);
     }
 
-    /*
-    private void cutsceneHandler(){
-        if (cutsceneTimerCheck()){
-            switch (cutsceneState){
-                case 0: case 10:
-                    joe.speak("Hello.");
-                    break;
-                case 1: case 11:
-                    joe.speak("My name is Joe.");
-                    break;
-                case 2: case 12:
-                    joe.speak("And I work in a button factory");
-                    break;
-                case 3: case 13:
-                    joe.speak("One day my boss said to me");
-                    aliveCharacters.add(purpleBastard.revive());
-                    break;
-                case 4: case 14:
-                    joe.shutIt();
-                    purpleBastard.speak("\"Are you busy, Joe?\"");
-                    break;
-                case 5: case 15:
-                    purpleBastard.shutIt();
-                    joe.speak("I said");
-                    break;
-                case 6: case 16:
-                    joe.speak("\"No.\"");
-                    break;
-                case 7:
-                    joe.shutIt();
-                    purpleBastard.speak("\"Well then hit this button with your spacebar.\"");
-                    if (canWeSpawnACircle()){
-                        ButtonObject firstButton = circleStack.pop().revive(
-                                new Vector2D(HALF_WIDTH,HALF_HEIGHT-50),
-                                new Vector2D(),
-                                30
-                        );
-                        aliveButtonObjects.add(firstButton);
-                        reviveRipple(firstButton);
-                        buttonCountChanged = true;
-                    }
-                    SoundManager.startBacking();
-                    break;
-                case 17:
-                    joe.shutIt();
-                    purpleBastard.speak("\"Well then hit this button with your spacebar.\"");
-                    reviveAButtonObject(false);
-                    SoundManager.startOverlay();
-                    break;
-                case 8:
-                    purpleBastard.begone();
-                case 18:
-                    purpleBastard.shutIt();
-                    joe.speak("So I hit that button with my spacebar");
-                    break;
-                case 9:
-                    joe.shutIt();
-                    break;
-                case 19:
-                    purpleBastard.speak("keep at least 2 buttons active or imma fire you.");
-                    joe.shutIt();
-                    break;
-                case 20:
-                    purpleBastard.speak("keep at least 2 buttons active or imma fire you.");
-                    break;
-                case 21:
-                    purpleBastard.shutIt();
-                    purpleBastard.begone();
-                    stillInCutscene = false;
-                    break;
-            }
-            cutsceneState++;
-        }
+    //moves to the ALL_DONE gamestate
+    private void ccc_moveToNextStateLogic(){
+        gameState = ALL_DONE;
     }
 
-    private boolean cutsceneTimerCheck(){
-        if (cutsceneTimer == 0){
-            cutsceneTimer = CUTSCENE_STATE_LENGTH;
-            return true;
-        } else{
-            cutsceneTimer--;
-            return false;
+
+    //---------------- ALL_DONE -----------------------------
+
+    //calls endThis() (going back to the title screen) if The Any Button is pressed
+    private void allDoneLogic(){
+        if (ctrl.getTheAnyButton()){
+            endThis();
+            //no further states
         }
     }
-     */
-
 
 
 }

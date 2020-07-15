@@ -1,0 +1,74 @@
+The Button Factory
+
+This game was made for the 'So Bad It's Good' Jam 2020
+https://itch.io/jam/sbigjam2020
+
+* DESIGN *
+
+Designed by 11BelowStudio
+Loosely based on that 'hello my name is joe and I work in a button factory' thing
+(no idea who came up with that in the first place)
+
+* CODE *
+
+Programming by 11BelowStudio
+
+Uses some sample code provided by Dr. Dimitri Ognibene
+
+Code to include the images in the .jar by JB Nizet on StackOverflow
+(https://stackoverflow.com/a/8362018)
+Code to include some text in the .jar by Drew MacInnis on StackOverflow
+(https://stackoverflow.com/a/20389418)
+
+* AUDIO *
+
+The good vocals and the decent voice acting by DELTA100
+Lyrics, bad voice work/acapella, kazooing and all the other sounds by 11BelowStudio
+Audio processed/mixed/etc using Audacity
+
+* VISUALS *
+
+Visuals by 11BelowStudio
+Sprites made using Paint.NET
+
+* CAST *
+
+Joe: Joe Mamma
+The boss: scary purple individual
+The player: you (I think)
+Percival: ????????????????
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+joe mamma lmao gottem *dab*

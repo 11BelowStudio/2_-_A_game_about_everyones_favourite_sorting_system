@@ -23,6 +23,7 @@ public abstract class Model {
     final List<GameObject> aliveBackground;
 
 
+
     //final Stack<BackgroundRippleObject> ripples;
 
 
@@ -135,7 +136,11 @@ public abstract class Model {
     public Model revive(){
         this.gameOver = false;
         this.stopThat = false;
+        //clears existing collections
+        clearCollections();
+        //sets up the model
         setupModel();
+        //starts the music
         startModelMusic();
         return this;
     }

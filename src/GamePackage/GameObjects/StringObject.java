@@ -29,11 +29,14 @@ public class StringObject extends GameObject {
     private Rectangle areaRectangle;
 
     //le ebic font has arrived no bamboozle
-    public static final Font MINI_SANS = new Font("Comic Sans MS",  Font.PLAIN , 12);
-    public static final Font SMALL_SANS = new Font("Comic Sans MS",  Font.PLAIN , 20);
-    public static final Font SANS = new Font("Comic Sans MS",  Font.PLAIN , 30);
-    public static final Font MEDIUM_SANS = new Font("Comic sans MS", Font.PLAIN,40);
-    public static final Font BIG_SANS = new Font("Comic sans MS", Font.PLAIN,50);
+    public static final Font SANS_12 = new Font("Comic Sans MS",  Font.PLAIN , 12);
+    public static final Font SANS_20 = new Font("Comic Sans MS",  Font.PLAIN , 20);
+    public static final Font SANS_30 = new Font("Comic Sans MS",  Font.PLAIN , 30);
+    public static final Font SANS_40 = new Font("Comic sans MS", Font.PLAIN,40);
+    public static final Font SANS_50 = new Font("Comic sans MS", Font.PLAIN,50);
+    public static final Font SANS_60 = new Font("Comic sans MS", Font.PLAIN,60);
+    public static final Font SANS_70 = new Font("Comic sans MS", Font.PLAIN,70);
+    public static final Font SANS_80 = new Font("Comic sans MS", Font.PLAIN,80);
 
     public StringObject(Vector2D p, Vector2D v, String s, int a, Font f){
         this(p,v,s,a);
@@ -67,7 +70,7 @@ public class StringObject extends GameObject {
 
         //objectColour = Color.WHITE;
         setPredefinedColour(WHITE_NUM);
-        theFont = SANS;
+        theFont = SANS_20;
         areaRectangle = new Rectangle();
         scrolling = false;
     }

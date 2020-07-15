@@ -11,8 +11,8 @@ public class GameRunner {
     private final GameFrame frame;
 
     private final Game game;
-    //private final TitleScreen title;
-    private final Game title;
+    private final TitleScreen title;
+    //private final Game title;
     private final View view;
 
     private final Timer repaintTimer;
@@ -44,8 +44,8 @@ public class GameRunner {
 
 
         //creating the two models
-        //title = new TitleScreen(ctrl);
-        title = new Game(ctrl);
+        title = new TitleScreen(ctrl);
+        //title = new Game(ctrl);
         game = new Game(ctrl);
 
         //repaintTimer, used to update view every 'DELAY' milliseconds (50fps)

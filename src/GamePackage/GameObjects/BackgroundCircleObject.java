@@ -7,7 +7,7 @@ import java.awt.*;
 
 
 
-public class TitleBackgroundCircleObject extends CircleObject {
+public class BackgroundCircleObject extends CircleObject {
 
     private static final int CIRCLE_X_BOUNDS = Constants.GAME_WIDTH - CIRCLE_RADIUS;
     private static final int CIRCLE_Y_BOUNDS = Constants.GAME_HEIGHT - CIRCLE_RADIUS;
@@ -16,14 +16,14 @@ public class TitleBackgroundCircleObject extends CircleObject {
     private static final int MAX_SPEED = 256;
     private static final int RANGE_SPEED = MAX_SPEED-MIN_SPEED;
 
-    public TitleBackgroundCircleObject() {
+    public BackgroundCircleObject() {
         super(new Vector2D(), new Vector2D());
     }
 
-    public TitleBackgroundCircleObject revive(){
+    public BackgroundCircleObject revive(){
         //revives this at a random (valid) position, going in a random direction, with a random speed
         super.revive(
-                TitleBackgroundCircleObject.randomPosInBounds(),
+                BackgroundCircleObject.randomPosInBounds(),
                 Vector2D.polarWithRandomAngle(MIN_SPEED + (Math.random() * RANGE_SPEED))
         );
         //and now, for defining the colour of it

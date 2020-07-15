@@ -1,14 +1,16 @@
 package GamePackage;
 
 //import GamePackage.GameObjects.BackgroundRippleObject;
+import GamePackage.GameObjects.BackgroundCircleObject;
+import GamePackage.GameObjects.GameObject;
 import GamePackage.GameObjects.StringObject;
 import utilities.TextAssetReader;
-import utilities.SoundManager;
 import utilities.Vector2D;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import static GamePackage.Constants.*;
 
@@ -23,14 +25,12 @@ public class TitleScreen extends Model {
     private static final int START_GAME_STATE = 3;
 
 
-    private static final int RIPPLE_CHANCES = 1024;
-    private int rippleTimer;
+
 
     private final List<StringObject> menuScreenStringObjects;
     private final StringObject titleText;
     private final StringObject subtitleText;
     private final StringObject play;
-    private final StringObject showScores;
     private final StringObject showCredits;
 
     private final ArrayList<StringObject> scrollingTextToAdd;
@@ -38,6 +38,11 @@ public class TitleScreen extends Model {
     private final static ArrayList<String> OPENING_TEXT = TextAssetReader.getOpeningText();
 
     private final static ArrayList<String> CREDITS_TEXT = TextAssetReader.getCreditsText();
+
+    private final Stack<BackgroundCircleObject> bgCircles;
+
+    private boolean notDoneSpawningCircles;
+    private boolean spawnCircleOnThisFrame;
 
 
     public TitleScreen(Controller ctrl) {
@@ -47,19 +52,45 @@ public class TitleScreen extends Model {
         menuScreenStringObjects = new ArrayList<>();
 
         //declaring the stringobjects for the menu screen
-        titleText = new StringObject(new Vector2D(HALF_WIDTH,HALF_HEIGHT/2),new Vector2D(),"The Button Factory",StringObject.MIDDLE_ALIGN,StringObject.BIG_SANS);
-        subtitleText = new StringObject(new Vector2D(HALF_WIDTH,5*(HALF_HEIGHT/8)), new Vector2D(),"A game about buttons",StringObject.MIDDLE_ALIGN,StringObject.MEDIUM_SANS);
-        play = new StringObject(new Vector2D(HALF_WIDTH,HALF_HEIGHT),new Vector2D(),"*Play*",StringObject.MIDDLE_ALIGN,StringObject.MEDIUM_SANS);
-        showScores = new StringObject(new Vector2D(HALF_WIDTH,5*(HALF_HEIGHT/4)),new Vector2D(),"*Show Scores*",StringObject.MIDDLE_ALIGN,StringObject.MEDIUM_SANS);
-        showCredits = new StringObject(new Vector2D(HALF_WIDTH,3*(HALF_HEIGHT/2)),new Vector2D(),"*Show Credits*",StringObject.MIDDLE_ALIGN,StringObject.MEDIUM_SANS);
-        //adding these to the collection of them
+        titleText = new StringObject(
+                new Vector2D(HALF_WIDTH,5*(SIXTEENTH_HEIGHT)),
+                new Vector2D(),
+                "2",
+                StringObject.MIDDLE_ALIGN,
+                StringObject.SANS_80
+        );
+        subtitleText = new StringObject(
+                new Vector2D(HALF_WIDTH,6*(SIXTEENTH_HEIGHT)),
+                new Vector2D(),"A game about everyone's favourite sorting system!",
+                StringObject.MIDDLE_ALIGN,
+                StringObject.SANS_30
+        );
+        play = new StringObject(
+                new Vector2D(HALF_WIDTH,HALF_HEIGHT),
+                new Vector2D(),"*Play*",
+                StringObject.MIDDLE_ALIGN,
+                StringObject.SANS_50
+        );
+
+        showCredits = new StringObject(
+                new Vector2D(HALF_WIDTH,5*(EIGHTH_HEIGHT)),
+                new Vector2D(),
+                "*Show Credits*",
+                StringObject.MIDDLE_ALIGN,
+                StringObject.SANS_50
+        );
+
+        //adding these to the collection of the menu screen string objects
         menuScreenStringObjects.add(titleText);
         menuScreenStringObjects.add(subtitleText);
         menuScreenStringObjects.add(play);
-        menuScreenStringObjects.add(showScores);
         menuScreenStringObjects.add(showCredits);
 
+        //declaring an arrayList to hold any scrollingText that needs to be added to aliveHUD
         scrollingTextToAdd = new ArrayList<>();
+
+        //declaring a stack to hold inactive BackgroundCircleObjects
+        bgCircles = new Stack<>();
     }
 
     @Override
@@ -69,15 +100,16 @@ public class TitleScreen extends Model {
     }
 
     void startModelMusic(){
-        SoundManager.startMenu();
+        //SoundManager.startMenu();
     }
 
     void stopModelMusic(){
-        SoundManager.stopMenu();
+        //SoundManager.stopMenu();
     }
 
     @Override
     void setupModel() {
+
         /*
         rippleTimer = 0;
         for (int i = 0; i < 50; i++) {
@@ -89,16 +121,27 @@ public class TitleScreen extends Model {
 
         //titleScreenStateHasChanged = false;
 
+
+        //setting up the opening scrolling text stuff
         createScrollingText(OPENING_TEXT, 30, 25);
         titleScreenState = SETTING_UP_SCROLLING_TEXT_STATE;
         titleScreenStateChangeHandler();
 
 
-        //aliveHUD.add(titleText);
-        //aliveHUD.add(subtitleText);
-        //aliveHUD.add(play);
-        //aliveHUD.add(showScores);
+        //ensuring the menu screen stringObjects are all dead
+        for (StringObject s: menuScreenStringObjects) {
+            s.kill();
+        }
 
+
+        //setting up the background circle stuff
+        for (int i = 0; i < 40; i++) {
+            //40 BackgroundCircleObjects constructed and pushed to bgCircles
+            bgCircles.push(new BackgroundCircleObject());
+        }
+        notDoneSpawningCircles = true;
+        spawnCircleOnThisFrame = false;
+        //well, the value is flipped before it's checked, so having it false makes a bg circle spawn on frame 1
     }
 
 
@@ -113,18 +156,16 @@ public class TitleScreen extends Model {
 
         boolean titleScreenStateHasChanged = false;
 
-        /*
-        for (BackgroundRippleObject o: backgroundObjects) {
+
+        //update bgCircleObjects in backgroundObjects
+        for (GameObject o: backgroundObjects) {
             o.update();
             if (o.stillAlive()){
                 aliveBackground.add(o);
-            } else{
-                ripples.push(o);
             }
         }
 
-         */
-
+        //update StringObjects in hudObjects
         for (StringObject o: hudObjects) {
             o.update();
             if (o.stillAlive()){
@@ -133,15 +174,13 @@ public class TitleScreen extends Model {
         }
 
 
-        /*
-        if (Math.random()*RIPPLE_CHANCES < rippleTimer && canWeSpawnARipple()){
-            aliveBackground.add(ripples.pop().revive());
-            rippleTimer = 0;
-        } else{
-            rippleTimer++;
+        if (notDoneSpawningCircles){
+            spawnCircleOnThisFrame = !spawnCircleOnThisFrame; //flips value of spawnCircleOnThisFrame
+            if (spawnCircleOnThisFrame){
+                //handles the spawning of bgObjects every other frame
+                bgCircleSpawnHandler();
+            }
         }
-
-         */
 
         Action currentAction = ctrl.getAction();
         switch (titleScreenState) {
@@ -157,14 +196,11 @@ public class TitleScreen extends Model {
                     Point clickPoint = currentAction.getClickLocation();
                     System.out.println(clickPoint);
                     if (titleText.isClicked(clickPoint)){
-                        SoundManager.whoIsJoe();
+                        titleText.cycleColours();
                     } else if (subtitleText.isClicked(clickPoint)){
-                        SoundManager.discussion();
+                        subtitleText.cycleColours();
                     } else if (play.isClicked(clickPoint)){
                         titleScreenState = START_GAME_STATE;
-                        titleScreenStateHasChanged = true;
-                    } else if (showScores.isClicked(clickPoint)){
-                        //createScrollingText(hs.StringArrayListLeaderboard(), 30, 50);
                         titleScreenStateHasChanged = true;
                     } else if (showCredits.isClicked(clickPoint)){
                         createScrollingText(CREDITS_TEXT, 30, 50);
@@ -186,6 +222,13 @@ public class TitleScreen extends Model {
         }
     }
 
+    private void bgCircleSpawnHandler(){
+        //pops top item from bgCircles, revives it, and adds it to aliveBackground
+        aliveBackground.add(bgCircles.pop().revive());
+        //if there's still stuff in bgCircles, it's not done spawning them
+        notDoneSpawningCircles = !bgCircles.isEmpty();
+    }
+
 
 
     private void createScrollingText(ArrayList<String> theText, int distFromBottom, double scrollSpeed){
@@ -199,6 +242,7 @@ public class TitleScreen extends Model {
             distFromBottom += 22;
         }
     }
+
 
     private void titleScreenStateChangeHandler(){
         switch (titleScreenState){
