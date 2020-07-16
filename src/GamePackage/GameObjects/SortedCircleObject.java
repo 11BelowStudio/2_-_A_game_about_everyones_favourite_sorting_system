@@ -129,7 +129,7 @@ public class SortedCircleObject extends CircleObject {
                     position.y = destinationVector.y;
                     velocity.set(0,0);
                     movementState = FINISHED_MOVING;
-                    //TODO: play a 'ba' noise or something (so it's clear that it's stopped)
+                    //play a 'ba' noise or something (so it's clear that it's stopped)
                     SoundManager.playBa();
                 }
                 break;
@@ -270,11 +270,11 @@ public class SortedCircleObject extends CircleObject {
         showingResult = true;
         if (isItCorrect){
             img = CORRECT;
-            //TODO: play a noise to signify that it's correct
+            //play a noise to signify that it's correct
             SoundManager.playCorrect();
         } else{
             img = WRONG;
-            //TODO: play a noise to signify that it's wrong
+            //play a noise to signify that it's wrong
             SoundManager.playWrong();
         }
         return isItCorrect;
