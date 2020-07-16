@@ -130,13 +130,16 @@ public class SortedCircleObject extends CircleObject {
                     velocity.set(0,0);
                     movementState = FINISHED_MOVING;
                     //TODO: play a 'ba' noise or something (so it's clear that it's stopped)
+                    SoundManager.playBa();
                 }
                 break;
         }
     }
 
     private void startMovingToYLocation(){
-        //TODO: play the clap noise
+
+        SoundManager.playDu();
+        //ensure that it doesn't go too far in the x axis, and then start moving in the Y axis
         position.x = destinationVector.x;
         velocity.set(Vector2D.polar(UP_RADIANS,circleVelocity));
         movementState = MOVING_TO_Y_LOCATION;
@@ -165,7 +168,6 @@ public class SortedCircleObject extends CircleObject {
 
         showingResult = false;
 
-        //TODO: play a kazoo toot noise
 
         return this;
 
@@ -229,12 +231,12 @@ public class SortedCircleObject extends CircleObject {
         if (sentToBlue){
             currentLocation = IN_BLUE;
             velocity.set(Vector2D.polar(LEFT_RADIANS,circleVelocity));
-            //TODO: play a saying 'blue' sound effect
+            //play a saying 'blue' sound effect
             SoundManager.playBlue();
         } else{
             currentLocation = IN_PINK;
             velocity.set(Vector2D.polar(RIGHT_RADIANS,circleVelocity));
-            //TODO: play a saying 'pink' sound effect
+            //play a saying 'pink' sound effect
             SoundManager.playPink();
         }
         destinationVector = destination;
@@ -269,9 +271,11 @@ public class SortedCircleObject extends CircleObject {
         if (isItCorrect){
             img = CORRECT;
             //TODO: play a noise to signify that it's correct
+            SoundManager.playCorrect();
         } else{
             img = WRONG;
             //TODO: play a noise to signify that it's wrong
+            SoundManager.playWrong();
         }
         return isItCorrect;
     }

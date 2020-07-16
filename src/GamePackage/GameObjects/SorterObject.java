@@ -3,6 +3,7 @@ package GamePackage.GameObjects;
 import GamePackage.Action;
 import GamePackage.Controller;
 import utilities.ImageManager;
+import utilities.SoundManager;
 import utilities.Vector2D;
 
 import java.awt.*;
@@ -73,6 +74,8 @@ public class SorterObject extends GameObject {
 
         //state will change to opposite state if the spacebar has been pressed
         if (currentAction.checkForSpacePress()){
+            //play the clap noise
+            SoundManager.playClap();
             if (destIsBlue){
                 img = PINK_SPRITE;
                 destIsBlue = false;

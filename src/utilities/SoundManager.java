@@ -4,7 +4,6 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.AudioInputStream;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 //import java.io.File;
 
@@ -19,6 +18,8 @@ public class SoundManager {
 
     //TODO: add some music
 
+    //TODO: could have layers of music (so like several clips of the same length, that are gradually overlaid on each other)
+
 
     private static boolean playingMenu = false;
     private static boolean doingWellTheme = false;
@@ -32,20 +33,21 @@ public class SoundManager {
 
 
     //arrays for clips that may be played multiple times at once
-    private final static Clip[] BUTTON_PRESS_ARRAY = new Clip[3];
     private final static Clip[] BUTTON_DECAY_ARRAY = new Clip[6];
 
-    private final static Clip[] PINK_ARRAY = new Clip[6];
-    private final static Clip[] BLUE_ARRAY = new Clip[6];
+    //private final static Clip[] CLAP_ARRAY = new Clip[6];
+    //private final static Clip[] PINK_ARRAY = new Clip[6];
+    //private final static Clip[] BLUE_ARRAY = new Clip[6];
 
     //cursor values for these arrays
-    private static int pressCursor = 0;
     private static int decayCursor = 0;
-    private static int pinkCursor = 0;
-    private static int blueCursor = 0;
+
+    //private static int clapCursor = 0;
+    //private static int pinkCursor = 0;
+    //private static int blueCursor = 0;
 
     //actually obtaining the clips
-    private final static Clip buttonPressNoise = getClip("clap");
+
     private final static Clip buttonDecayNoise = getClip("plac");
 
     private final static Clip newButton = getClip("newButton");
@@ -62,14 +64,22 @@ public class SoundManager {
     private final static Clip conversation = getClip("a conversation");
     private final static Clip joesName = getClip("joes full name");
 
+
+    private final static Clip clap = getClip("clap");
     private final static Clip pink = getClip("pink");
     private final static Clip blue = getClip("blue");
+    private final static Clip ba = getClip("ba");
+    private final static Clip happyToot = getClip("happy toot");
+    private final static Clip sadToot = getClip("sad toot");
+    private final static Clip newToot = getClip("new toot");
+    private final static Clip du = getClip("du");
 
     static{
-        Arrays.fill(BUTTON_PRESS_ARRAY,buttonPressNoise);
         Arrays.fill(BUTTON_DECAY_ARRAY,buttonDecayNoise);
-        Arrays.fill(PINK_ARRAY,pink);
-        Arrays.fill(BLUE_ARRAY,blue);
+
+        //Arrays.fill(CLAP_ARRAY, clap);
+        //Arrays.fill(PINK_ARRAY,pink);
+        //Arrays.fill(BLUE_ARRAY,blue);
     }
 
 
@@ -188,9 +198,21 @@ public class SoundManager {
     //playing a particular sound
     public static void playNewButton() {play(newButton);}
     public static void playDespawn(){ play(despawn);}
-
     public static void discussion() {play(conversation);}
     public static void whoIsJoe(){play(joesName);}
+
+
+    public static void playPink(){play(pink);}
+    public static void playBlue(){play(blue);}
+
+    public static void playClap(){play(clap);}
+    public static void playBa(){play(ba);}
+
+    public static void playCorrect(){play(happyToot);}
+    public static void playWrong(){play(sadToot);}
+    public static void playSpawnNoise(){play(newToot);}
+
+    public static void playDu(){play(du);}
 
 
     //playing the clips that are held in an array of Clips
@@ -200,21 +222,15 @@ public class SoundManager {
         return ((++arrayCursor) % clipArray.length);
     }
 
-    public static void playButtonPress() {
-        pressCursor = playClipHeldInArray(BUTTON_PRESS_ARRAY, pressCursor);
-    }
-
     public static void playButtonDecay(){
         decayCursor = playClipHeldInArray(BUTTON_DECAY_ARRAY, decayCursor);
     }
 
-    public static void playPink(){
-        pinkCursor = playClipHeldInArray(PINK_ARRAY,pinkCursor);
-    }
+    //public static void playClap() { clapCursor = playClipHeldInArray(CLAP_ARRAY, clapCursor); }
 
-    public static void playBlue(){
-        blueCursor = playClipHeldInArray(BLUE_ARRAY,blueCursor);
-    }
+    //public static void playPink(){ pinkCursor = playClipHeldInArray(PINK_ARRAY,pinkCursor); }
+
+    //public static void playBlue(){ blueCursor = playClipHeldInArray(BLUE_ARRAY,blueCursor); }
 
 
 

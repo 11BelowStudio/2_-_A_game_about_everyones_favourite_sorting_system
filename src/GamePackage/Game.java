@@ -1,6 +1,7 @@
 package GamePackage;
 
 import GamePackage.GameObjects.*;
+import utilities.SoundManager;
 import utilities.Vector2D;
 
 import java.util.ArrayList;
@@ -47,7 +48,7 @@ public class Game extends Model{
 
 
 
-    private int circleSpawnTimer;
+    private int circleTimer;
     private int currentCircleSpawnDelay;
     private static final int MIN_CIRCLE_SPAWN_TIME = 25; //min of 0.5 seconds between circles
     private static final int MAX_CIRCLE_SPAWN_TIME = 500; //initially 10 seconds between circles
@@ -67,23 +68,12 @@ public class Game extends Model{
 
     private int correctCount;
     private int correctCountCursor;
-    private boolean countOnThisFrame;
+
+    private static final int CORRECT_COUNT_TIMER = 5; //5 frames between counting each sortedCircleObject
 
     public Game(Controller ctrl) {
         super(ctrl);
-        //joe = new PlayerObject(ctrl);
-        //purpleBastard = new BossObject();
 
-        /*
-        scoreText = new AttributeStringObject<>(
-                new Vector2D(HALF_WIDTH, 20),
-                new Vector2D(),
-                "Score: ",
-                0,
-                StringObject.MIDDLE_ALIGN
-        );
-
-         */
 
         sorter = new SorterObject(ctrl);
         circleStack = new Stack<>();
@@ -213,7 +203,7 @@ public class Game extends Model{
         aliveHUD.add(pressSpaceText.revive());
 
         currentCircleSpawnDelay = MAX_CIRCLE_SPAWN_TIME;
-        circleSpawnTimer = 1; //circle spawning logic always decrements the timer by 1 before checking it
+        circleTimer = 1; //circle spawning logic always decrements the timer by 1 before checking it
         //setting timer to 1 ensures circle will spawn on frame 1
 
         //TODO: start anticipatory music whilst waiting for player to press space
@@ -317,10 +307,10 @@ public class Game extends Model{
 
     //Wrapper for this state
     private void circleSpawningLogic(){
-        circleSpawnTimer--; //timer counts down
+        circleTimer--; //timer counts down
 
         //checks if the circle spawn timer has expired
-        if (circleSpawnTimer <= 0){
+        if (circleTimer <= 0){
             //revives a circle object and resets the spawn timer if the timer has expired
             cs_reviveACircleObject();
             cs_resetCircleSpawnTimer();
@@ -334,7 +324,7 @@ public class Game extends Model{
             //the delay until the next circle spawning will be decremented if it's longer than the minimum delay
         }
         //timer is reset to what the current value of the delay is
-        circleSpawnTimer = currentCircleSpawnDelay;
+        circleTimer = currentCircleSpawnDelay;
     }
 
 
@@ -348,6 +338,8 @@ public class Game extends Model{
             aliveSortCircleObjects.add(circleStack.pop().revive(circleTypes.get(circleCount),circleCount));
 
             circleCount++; //circleCount incremented
+
+            SoundManager.playSpawnNoise();
 
             //double-checks if there's anything left in the circleStack
             if (cs_checkIfMoreCirclesNeedToSpawn()) {
@@ -485,8 +477,9 @@ public class Game extends Model{
         aliveHUD.add(correctCountText.revive(correctCount));
         correctCountCursor = 0;
         //starts at 0
-        countOnThisFrame = false;
         //counts every other frame (25 counted per second) so it's actually possible to see them being counted
+
+        circleTimer = CORRECT_COUNT_TIMER;
 
         //TODO: end gameplay music, start more relaxing 'it's done now pls to relax' music
     }
@@ -496,8 +489,9 @@ public class Game extends Model{
 
     //Wrapper function
     private void correctCountLogic(){
-        countOnThisFrame = ! countOnThisFrame; //flips this boolean value (so it only tries to count every other frame)
-        if (countOnThisFrame){
+        //countOnThisFrame = ! countOnThisFrame; //flips this boolean value (so it only tries to count every other frame)
+        //if (countOnThisFrame){
+        if (ccc_timerHandler()){
             //obtains the circle object which is being counted (at the index of aliveCircleObjects which the cursor points to)
             SortedCircleObject objectWhatIsBeingCounted = aliveSortCircleObjects.get(correctCountCursor);
 
@@ -517,6 +511,18 @@ public class Game extends Model{
             if (correctCountCursor == 40){
                 ccc_moveToNextStateLogic();
             }
+        }
+    }
+
+    private boolean ccc_timerHandler(){
+        circleTimer--; //count down by 1
+        if (circleTimer == 0){
+            //reset timer and return true if done
+            circleTimer = CORRECT_COUNT_TIMER;
+            return true;
+        } else {
+            //return false if not done yet
+            return false;
         }
     }
 
