@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="2 - A Game About Everyone's Favourite Sorting System!">
+    <output-path>$PROJECT_DIR$/compiled versions/</output-path>
+    <root id="archive" name="2 - A Game About Everyone's Favourite Sorting System!.jar">
+      <element id="module-output" name="2 - a game about everyone's favourite sorting system" />
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
+      </element>
+    </root>
+  </artifact>
+</component>
