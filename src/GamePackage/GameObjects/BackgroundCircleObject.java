@@ -65,10 +65,10 @@ public class BackgroundCircleObject extends CircleObject {
         if (cisnt){
             transitioning = true;
             overlayR = overlayColor.getRed();
-            overlayB = overlayColor.getBlue();
             overlayG = overlayColor.getGreen();
+            overlayB = overlayColor.getBlue();
             overlayAlpha = 255;
-            transitionLength = (int)(1 + Math.random()*50);
+            transitionLength = (int)(1 + Math.random()*25);
             //how many frames between each decrement of the overlay alpha
             transitionTimer = transitionLength;
         }

@@ -23,6 +23,8 @@ public class TitleScreen extends Model {
     private static final int SHOWING_MENU_STATE = 2;
     private static final int START_GAME_STATE = 3;
 
+    private static final int INTRO_SCROLL_SPEED = 25;
+    private static final int CREDITS_SCROLL_SPEED = 50;
 
     private final List<StringObject> menuScreenStringObjects;
     private final StringObject titleText;
@@ -123,7 +125,7 @@ public class TitleScreen extends Model {
 
 
         //setting up the opening scrolling text stuff
-        createScrollingText(OPENING_TEXT, 30, 25);
+        createScrollingText(OPENING_TEXT, 30, INTRO_SCROLL_SPEED);
         titleScreenState = SETTING_UP_SCROLLING_TEXT_STATE;
         titleScreenStateChangeHandler();
 
@@ -191,7 +193,7 @@ public class TitleScreen extends Model {
                         titleScreenState = START_GAME_STATE;
                         titleScreenStateHasChanged = true;
                     } else if (showCredits.isClicked(clickPoint)){
-                        createScrollingText(CREDITS_TEXT, 30, 50);
+                        createScrollingText(CREDITS_TEXT, 30, CREDITS_SCROLL_SPEED);
                         titleScreenStateHasChanged = true;
                     } else if (quitText.isClicked(clickPoint)){
                         quitText.cycleColours();
