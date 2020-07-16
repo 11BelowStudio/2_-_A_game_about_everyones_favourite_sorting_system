@@ -30,11 +30,8 @@ public class SorterObject extends GameObject {
 
     boolean hasSwapped;
 
-    //TODO: spritesheets. (seperate pink and blue spritesheet, 4 frames on each)
-    //TODO: array of the co-ordinates for each sprite in the spritesheets
-
     private int animationCountdown;
-    private static int ANIMATION_DELAY = 4;
+    private static int ANIMATION_DELAY = 6;
 
     private int currentSpriteCursor;
     //will be used to get the correct data from the spritesheet co-ordinate array when it comes to drawing them
@@ -104,7 +101,6 @@ public class SorterObject extends GameObject {
 
     @Override
     void renderObject(Graphics2D g) {
-        //TODO: spritesheet stuff
         //g.drawImage(img,-IMG_HALF_WIDTH,-IMG_HALF_HEIGHT,null);
         g.drawImage(
                 img,
