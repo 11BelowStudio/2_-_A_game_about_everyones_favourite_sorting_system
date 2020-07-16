@@ -4,6 +4,7 @@ package GamePackage;
 import GamePackage.GameObjects.BackgroundCircleObject;
 import GamePackage.GameObjects.GameObject;
 import GamePackage.GameObjects.StringObject;
+import utilities.SoundManager;
 import utilities.TextAssetReader;
 import utilities.Vector2D;
 
@@ -95,13 +96,7 @@ public class TitleScreen extends Model {
         return this;
     }
 
-    void startModelMusic(){
-        //SoundManager.startMenu();
-    }
 
-    void stopModelMusic(){
-        //SoundManager.stopMenu();
-    }
 
     @Override
     void setupModel() {

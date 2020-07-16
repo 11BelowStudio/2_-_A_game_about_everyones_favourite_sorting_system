@@ -1,6 +1,7 @@
 package GamePackage;
 
 import GamePackage.GameObjects.*;
+import utilities.SoundManager;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -125,13 +126,17 @@ public abstract class Model {
 
     void endThis(){
         stopThat = true;
-        stopModelMusic();
+        stopAllMusic();
         clearCollections();
     }
 
-    abstract void startModelMusic();
+    void startMusic(){
+        SoundManager.startBacking();
+    }
 
-    abstract void stopModelMusic();
+    void stopAllMusic(){
+        //SoundManager.endBacking();
+    }
 
     public Model revive(){
         this.gameOver = false;
@@ -141,7 +146,7 @@ public abstract class Model {
         //sets up the model
         setupModel();
         //starts the music
-        startModelMusic();
+        startMusic();
         return this;
     }
 

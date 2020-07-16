@@ -152,12 +152,14 @@ public class Game extends Model{
         return this;
     }
 
-    void startModelMusic(){
-        //add music
+    void startMusic(){
+        SoundManager.startReverb();
     }
 
-    void stopModelMusic(){
-        //stop the music at the appropriate time
+    void stopAllMusic(){
+        SoundManager.endBacking();
+        SoundManager.endReverb();
+        SoundManager.endSecondLoop();
     }
 
     @Override
@@ -206,7 +208,7 @@ public class Game extends Model{
         circleTimer = 1; //circle spawning logic always decrements the timer by 1 before checking it
         //setting timer to 1 ensures circle will spawn on frame 1
 
-        //TODO: start anticipatory music whilst waiting for player to press space
+
 
     }
 
@@ -298,8 +300,8 @@ public class Game extends Model{
             //the pressSpaceText is no longer needed
         gameState = CIRCLES_SPAWNING;
             //now in CIRCLES_SPAWNING state
-        //TODO: end anticipatory music
-        //TODO: start circle spawning music
+        SoundManager.startBacking();
+
     }
 
 
@@ -409,6 +411,7 @@ public class Game extends Model{
                 infoB.setTextAndPredefinedColour("system",StringObject.WHITE_NUM);
                 infoC.setText("is");
                 infoD.setTextAndPredefinedColour("perfect.",StringObject.WHITE_NUM);
+                SoundManager.startSecondLoop();
                 break;
             case 7:
                 //'It has no flaws.' (objectively wrong)

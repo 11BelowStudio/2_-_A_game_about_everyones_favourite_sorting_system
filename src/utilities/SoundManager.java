@@ -26,6 +26,9 @@ public class SoundManager {
     private static boolean percivalIsHere = false;
 
     private static boolean backingLooping = false;
+    private static boolean reverbLooping = false;
+    private static boolean secondLooping = false;
+
     private static boolean overlayLooping = false;
 
     // this may need modifying
@@ -55,7 +58,7 @@ public class SoundManager {
 
     private final static Clip menuTheme = getClip("TheMenuTheme");
 
-    private final static Clip backingLoop = getClip("oneButtonLoop");
+    //private final static Clip backingLoop = getClip("oneButtonLoop");
     private final static Clip overlayLoop = getClip("twoButtonLoop");
 
     private final static Clip doingGood = getClip("TheMusicWhatPlaysWhenYouAreDoingWell");
@@ -73,6 +76,10 @@ public class SoundManager {
     private final static Clip sadToot = getClip("sad toot");
     private final static Clip newToot = getClip("new toot");
     private final static Clip du = getClip("du");
+
+    private final static Clip backingLoop = getClip("backing loop");
+    private final static Clip reverbLoop = getClip("reverb backing loop");
+    private final static Clip secondLoop = getClip("the second loop");
 
     static{
         Arrays.fill(BUTTON_DECAY_ARRAY,buttonDecayNoise);
@@ -126,10 +133,65 @@ public class SoundManager {
 
     public static void startBacking(){
         if (!backingLooping){
+            if (reverbLooping){
+                backingLoop.setFramePosition(reverbLoop.getFramePosition());
+                endReverb();
+            }
             backingLoop.loop(-1);
             backingLooping = true;
         }
     }
+
+    public static void endBacking(){
+        if (backingLooping) {
+            if (overlayLooping) {
+                endOverlay();
+            }
+            backingLoop.loop(0);
+            backingLoop.stop();
+            backingLooping = false;
+        }
+    }
+
+
+    public static void startReverb(){
+        if (!reverbLooping){
+            if (backingLooping){
+                reverbLoop.setFramePosition(backingLoop.getFramePosition());
+                endBacking();
+            }
+            reverbLoop.loop(-1);
+            reverbLooping = true;
+        }
+    }
+
+    public static void endReverb(){
+        if (reverbLooping) {
+            reverbLoop.loop(0);
+            reverbLoop.stop();
+            reverbLooping = false;
+        }
+    }
+
+    public static void startSecondLoop(){
+        if (!secondLooping){
+            if (backingLooping){
+                secondLoop.setFramePosition(backingLoop.getFramePosition());
+                //endBacking();
+            }
+            secondLoop.loop(-1);
+            secondLooping = true;
+        }
+    }
+
+    public static void endSecondLoop(){
+        if (secondLooping) {
+            secondLoop.loop(0);
+            secondLoop.stop();
+            secondLooping = false;
+        }
+    }
+
 
     public static void startOverlay(){
         if (!overlayLooping){
@@ -139,20 +201,13 @@ public class SoundManager {
         }
     }
 
+
     public static void endOverlay(){
         overlayLoop.loop(0);
         overlayLoop.stop();
         overlayLooping = false;
     }
 
-    public static void endBacking(){
-        if (overlayLooping){
-            endOverlay();
-        }
-        backingLoop.loop(0);
-        backingLoop.stop();
-        backingLooping = false;
-    }
 
     public static void startDoingWell(){
 
