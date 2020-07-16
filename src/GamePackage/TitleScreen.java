@@ -39,7 +39,7 @@ public class TitleScreen extends Model {
 
     private final static ArrayList<String> OPENING_TEXT = TextAssetReader.getOpeningText();
 
-    //TODO: update contents of credits.txt
+
     private final static ArrayList<String> CREDITS_TEXT = TextAssetReader.getCreditsText();
 
 
