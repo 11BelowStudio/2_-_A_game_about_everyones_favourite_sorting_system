@@ -1,6 +1,7 @@
 package GamePackage.GameObjects;
 
 import utilities.ImageManager;
+import utilities.SoundManager;
 import utilities.Vector2D;
 
 import java.awt.*;
@@ -229,10 +230,12 @@ public class SortedCircleObject extends CircleObject {
             currentLocation = IN_BLUE;
             velocity.set(Vector2D.polar(LEFT_RADIANS,circleVelocity));
             //TODO: play a saying 'blue' sound effect
+            SoundManager.playBlue();
         } else{
             currentLocation = IN_PINK;
             velocity.set(Vector2D.polar(RIGHT_RADIANS,circleVelocity));
             //TODO: play a saying 'pink' sound effect
+            SoundManager.playPink();
         }
         destinationVector = destination;
         movementState = MOVING_TO_X_LOCATION;

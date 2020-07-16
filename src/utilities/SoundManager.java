@@ -4,6 +4,7 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.AudioInputStream;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 //import java.io.File;
 
@@ -27,15 +28,21 @@ public class SoundManager {
     private static boolean overlayLooping = false;
 
     // this may need modifying
-    private final static String path = "resourcesPlsNoDelet/sounds/";
+    private final static String path = "resources/";
 
 
     //arrays for clips that may be played multiple times at once
     private final static Clip[] BUTTON_PRESS_ARRAY = new Clip[3];
     private final static Clip[] BUTTON_DECAY_ARRAY = new Clip[6];
+
+    private final static Clip[] PINK_ARRAY = new Clip[6];
+    private final static Clip[] BLUE_ARRAY = new Clip[6];
+
     //cursor values for these arrays
     private static int pressCursor = 0;
     private static int decayCursor = 0;
+    private static int pinkCursor = 0;
+    private static int blueCursor = 0;
 
     //actually obtaining the clips
     private final static Clip buttonPressNoise = getClip("clap");
@@ -55,9 +62,14 @@ public class SoundManager {
     private final static Clip conversation = getClip("a conversation");
     private final static Clip joesName = getClip("joes full name");
 
+    private final static Clip pink = getClip("pink");
+    private final static Clip blue = getClip("blue");
+
     static{
         Arrays.fill(BUTTON_PRESS_ARRAY,buttonPressNoise);
         Arrays.fill(BUTTON_DECAY_ARRAY,buttonDecayNoise);
+        Arrays.fill(PINK_ARRAY,pink);
+        Arrays.fill(BLUE_ARRAY,blue);
     }
 
 
@@ -65,6 +77,7 @@ public class SoundManager {
     // methods which do not modify any fields
 
     private static void play(Clip clip) {
+        //clip.stop();
         clip.setFramePosition(0);
         clip.start();
     }
@@ -183,10 +196,8 @@ public class SoundManager {
     //playing the clips that are held in an array of Clips
     private static int playClipHeldInArray(Clip[] clipArray, int arrayCursor){
         //play the clip at the position the cursor points to, increment the cursor value, and return it.
-        Clip clip = clipArray[arrayCursor];
-        clip.setFramePosition(0);
-        clip.start();
-        return ((arrayCursor + 1) % clipArray.length);
+        play(clipArray[arrayCursor]);
+        return ((++arrayCursor) % clipArray.length);
     }
 
     public static void playButtonPress() {
@@ -195,6 +206,14 @@ public class SoundManager {
 
     public static void playButtonDecay(){
         decayCursor = playClipHeldInArray(BUTTON_DECAY_ARRAY, decayCursor);
+    }
+
+    public static void playPink(){
+        pinkCursor = playClipHeldInArray(PINK_ARRAY,pinkCursor);
+    }
+
+    public static void playBlue(){
+        blueCursor = playClipHeldInArray(BLUE_ARRAY,blueCursor);
     }
 
 
