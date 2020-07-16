@@ -16,58 +16,16 @@ import java.util.Arrays;
 
 public class SoundManager {
 
-    //TODO: add some music
 
-    //TODO: could have layers of music (so like several clips of the same length, that are gradually overlaid on each other)
-
-
-    private static boolean playingMenu = false;
-    private static boolean doingWellTheme = false;
-    private static boolean percivalIsHere = false;
-
-    private static boolean backingLooping = false;
-    private static boolean reverbLooping = false;
-    private static boolean secondLooping = false;
-
-    private static boolean overlayLooping = false;
 
     // this may need modifying
     private final static String path = "resources/";
 
 
-    //arrays for clips that may be played multiple times at once
-    private final static Clip[] BUTTON_DECAY_ARRAY = new Clip[6];
-
-    //private final static Clip[] CLAP_ARRAY = new Clip[6];
-    //private final static Clip[] PINK_ARRAY = new Clip[6];
-    //private final static Clip[] BLUE_ARRAY = new Clip[6];
-
-    //cursor values for these arrays
-    private static int decayCursor = 0;
-
-    //private static int clapCursor = 0;
-    //private static int pinkCursor = 0;
-    //private static int blueCursor = 0;
 
     //actually obtaining the clips
 
-    private final static Clip buttonDecayNoise = getClip("plac");
-
-    private final static Clip newButton = getClip("newButton");
-    private final static Clip despawn = getClip("despawn");
-
-    private final static Clip menuTheme = getClip("TheMenuTheme");
-
-    //private final static Clip backingLoop = getClip("oneButtonLoop");
-    private final static Clip overlayLoop = getClip("twoButtonLoop");
-
-    private final static Clip doingGood = getClip("TheMusicWhatPlaysWhenYouAreDoingWell");
-    private final static Clip percival = getClip("percival");
-
-    private final static Clip conversation = getClip("a conversation");
-    private final static Clip joesName = getClip("joes full name");
-
-
+    //sfx
     private final static Clip clap = getClip("clap");
     private final static Clip pink = getClip("pink");
     private final static Clip blue = getClip("blue");
@@ -77,17 +35,41 @@ public class SoundManager {
     private final static Clip newToot = getClip("new toot");
     private final static Clip du = getClip("du");
 
+    //music
     private final static Clip backingLoop = getClip("backing loop");
     private final static Clip reverbLoop = getClip("reverb backing loop");
     private final static Clip secondLoop = getClip("the second loop");
+    private final static Clip thirdLoop = getClip("loop the third");
+    private final static Clip fourthLoop = getClip("loop number four");
+    private final static Clip resultsLoop = getClip("results loop");
 
+    //recording whether or not these are looping
+    private static boolean backingLooping = false;
+    private static boolean reverbLooping = false;
+    private static boolean secondLooping = false;
+    private static boolean thirdLooping = false;
+    private static boolean fourthLooping = false;
+    private static boolean resultsLooping = false;
+
+    /*
+    //arrays for clips that may be played multiple times at once
+    private final static Clip[] CLAP_ARRAY = new Clip[6];
+    private final static Clip[] PINK_ARRAY = new Clip[6];
+    private final static Clip[] BLUE_ARRAY = new Clip[6];
+
+    //cursor values for these arrays
+    private static int clapCursor = 0;
+    private static int pinkCursor = 0;
+    private static int blueCursor = 0;
+
+    //filling these arrays
     static{
-        Arrays.fill(BUTTON_DECAY_ARRAY,buttonDecayNoise);
-
-        //Arrays.fill(CLAP_ARRAY, clap);
-        //Arrays.fill(PINK_ARRAY,pink);
-        //Arrays.fill(BLUE_ARRAY,blue);
+        Arrays.fill(CLAP_ARRAY, clap);
+        Arrays.fill(PINK_ARRAY,pink);
+        Arrays.fill(BLUE_ARRAY,blue);
     }
+
+     */
 
 
 
@@ -114,23 +96,6 @@ public class SoundManager {
 
 
 
-    public static void startMenu(){
-
-        if (!playingMenu){
-            menuTheme.loop(-1);
-            playingMenu = true;
-        }
-
-    }
-
-    public static void stopMenu(){
-
-        menuTheme.loop(0);
-        menuTheme.stop();
-        playingMenu = false;
-
-    }
-
     public static void startBacking(){
         if (!backingLooping){
             if (reverbLooping){
@@ -144,9 +109,6 @@ public class SoundManager {
 
     public static void endBacking(){
         if (backingLooping) {
-            if (overlayLooping) {
-                endOverlay();
-            }
             backingLoop.loop(0);
             backingLoop.stop();
             backingLooping = false;
@@ -192,71 +154,67 @@ public class SoundManager {
         }
     }
 
+    public static void startThirdLoop(){
+        if(!thirdLooping){
+            if(secondLooping){
+                thirdLoop.setFramePosition(secondLoop.getFramePosition());
+                endSecondLoop();
+            }
+            thirdLoop.loop(-1);
+            thirdLooping = true;
+        }
+    }
 
-    public static void startOverlay(){
-        if (!overlayLooping){
-            overlayLoop.setFramePosition(backingLoop.getFramePosition());
-            overlayLoop.loop(-1);
-            overlayLooping = true;
+    public static void endThirdLoop(){
+        if (thirdLooping){
+            thirdLoop.loop(0);
+            thirdLoop.stop();
+            thirdLooping = false;
+        }
+    }
+
+    public static void startFourthLoop(){
+        if (!fourthLooping){
+            if (thirdLooping){
+                fourthLoop.setFramePosition(thirdLoop.getFramePosition());
+                endThirdLoop();
+            }
+            fourthLoop.loop(-1);
+            fourthLooping = true;
+        }
+    }
+
+    public static void endFourthLoop(){
+        if (fourthLooping){
+            fourthLoop.loop(0);
+            fourthLoop.stop();
+            fourthLooping = false;
+        }
+    }
+
+    public static void startResultsLoop(){
+        if (!resultsLooping){
+            endFourthLoop();
+            endBacking();
+            resultsLoop.loop(-1);
+            resultsLooping = true;
+        }
+    }
+
+    public static void endResultsLoop(){
+        if (resultsLooping){
+            resultsLoop.loop(0);
+            resultsLoop.stop();
+            resultsLooping = false;
         }
     }
 
 
-    public static void endOverlay(){
-        overlayLoop.loop(0);
-        overlayLoop.stop();
-        overlayLooping = false;
-    }
 
-
-    public static void startDoingWell(){
-
-        if (!doingWellTheme){
-            doingGood.setFramePosition(0);
-            doingGood.loop(-1);
-            doingWellTheme = true;
-        }
-
-    }
-
-
-    public static void helloPercival(){
-        if (!percivalIsHere){
-            percival.setFramePosition(0);
-            percival.loop(-1);
-            percivalIsHere = true;
-        }
-
-    }
-
-    public static void stopDoingWell(){
-        if (percivalIsHere) {
-            byePercival();
-        }
-        doingGood.loop(0);
-        doingGood.stop();
-
-        doingWellTheme = false;
-
-    }
-
-    public static void byePercival(){
-        percival.loop(0);
-        percival.stop();
-
-        percivalIsHere = false;
-
-    }
 
 
 
     //playing a particular sound
-    public static void playNewButton() {play(newButton);}
-    public static void playDespawn(){ play(despawn);}
-    public static void discussion() {play(conversation);}
-    public static void whoIsJoe(){play(joesName);}
-
-
     public static void playPink(){play(pink);}
     public static void playBlue(){play(blue);}
 
@@ -277,15 +235,15 @@ public class SoundManager {
         return ((++arrayCursor) % clipArray.length);
     }
 
-    public static void playButtonDecay(){
-        decayCursor = playClipHeldInArray(BUTTON_DECAY_ARRAY, decayCursor);
-    }
+    /*
 
     //public static void playClap() { clapCursor = playClipHeldInArray(CLAP_ARRAY, clapCursor); }
 
     //public static void playPink(){ pinkCursor = playClipHeldInArray(PINK_ARRAY,pinkCursor); }
 
     //public static void playBlue(){ blueCursor = playClipHeldInArray(BLUE_ARRAY,blueCursor); }
+
+     */
 
 
 

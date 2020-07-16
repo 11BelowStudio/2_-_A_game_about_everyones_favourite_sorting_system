@@ -11,13 +11,11 @@ import utilities.Vector2D;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 import static GamePackage.Constants.*;
 
 public class TitleScreen extends Model {
 
-    //TODO: Music
 
     private int titleScreenState;
     private static final int SETTING_UP_SCROLLING_TEXT_STATE = 0;
@@ -26,13 +24,13 @@ public class TitleScreen extends Model {
     private static final int START_GAME_STATE = 3;
 
 
-
-
     private final List<StringObject> menuScreenStringObjects;
     private final StringObject titleText;
     private final StringObject subtitleText;
     private final StringObject play;
     private final StringObject showCredits;
+    private final StringObject quitText;
+    private final StringObject byMeText;
 
     private final ArrayList<StringObject> scrollingTextToAdd;
 
@@ -60,13 +58,15 @@ public class TitleScreen extends Model {
         );
         subtitleText = new StringObject(
                 new Vector2D(HALF_WIDTH,6*(SIXTEENTH_HEIGHT)),
-                new Vector2D(),"A Game About Everyone's Favourite Sorting System!",
+                new Vector2D(),
+                "A Game About Everyone's Favourite Sorting System!",
                 StringObject.MIDDLE_ALIGN,
                 StringObject.SANS_30
         );
         play = new StringObject(
                 new Vector2D(HALF_WIDTH,HALF_HEIGHT),
-                new Vector2D(),"*Play*",
+                new Vector2D(),
+                "*Play*",
                 StringObject.MIDDLE_ALIGN,
                 StringObject.SANS_50
         );
@@ -79,11 +79,31 @@ public class TitleScreen extends Model {
                 StringObject.SANS_50
         );
 
+        quitText = new StringObject(
+                new Vector2D(HALF_WIDTH, 7*(EIGHTH_HEIGHT)),
+                new Vector2D(),
+                "Press escape to quit",
+                StringObject.MIDDLE_ALIGN,
+                StringObject.SANS_30
+        );
+
+        byMeText = new StringObject(
+                new Vector2D(HALF_WIDTH, 15.5*SIXTEENTH_HEIGHT),
+                new Vector2D(),
+                "by 11BelowStudio (2020)",
+                StringObject.MIDDLE_ALIGN,
+                StringObject.SANS_20
+        );
+
+
+
         //adding these to the collection of the menu screen string objects
         menuScreenStringObjects.add(titleText);
         menuScreenStringObjects.add(subtitleText);
         menuScreenStringObjects.add(play);
         menuScreenStringObjects.add(showCredits);
+        menuScreenStringObjects.add(quitText);
+        menuScreenStringObjects.add(byMeText);
 
         //declaring an arrayList to hold any scrollingText that needs to be added to aliveHUD
         scrollingTextToAdd = new ArrayList<>();
@@ -100,17 +120,6 @@ public class TitleScreen extends Model {
 
     @Override
     void setupModel() {
-
-        /*
-        rippleTimer = 0;
-        for (int i = 0; i < 50; i++) {
-            ripples.push(new BackgroundRippleObject());
-        }
-
-         */
-
-
-        //titleScreenStateHasChanged = false;
 
 
         //setting up the opening scrolling text stuff
@@ -184,6 +193,10 @@ public class TitleScreen extends Model {
                     } else if (showCredits.isClicked(clickPoint)){
                         createScrollingText(CREDITS_TEXT, 30, 50);
                         titleScreenStateHasChanged = true;
+                    } else if (quitText.isClicked(clickPoint)){
+                        quitText.cycleColours();
+                    } else if (byMeText.isClicked(clickPoint)){
+                        byMeText.cycleColours();
                     }
                 } else if (currentAction.checkForSpacePress()){
                     titleScreenState = START_GAME_STATE;

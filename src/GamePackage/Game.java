@@ -160,6 +160,9 @@ public class Game extends Model{
         SoundManager.endBacking();
         SoundManager.endReverb();
         SoundManager.endSecondLoop();
+        SoundManager.endThirdLoop();
+        SoundManager.endFourthLoop();
+        SoundManager.endResultsLoop();
     }
 
     @Override
@@ -432,9 +435,16 @@ public class Game extends Model{
                 for(StringObject s: informationalStringObjects){
                     s.kill();
                 }
+                //end second loop, start third loop
+                SoundManager.startThirdLoop();
+                SoundManager.endSecondLoop();
+                break;
+            case 10:
                 break;
             case 21:
-                //TODO: maybe stop current music, play some more intense/frantic music instead?
+                //end third loop, start fourth loop
+                SoundManager.startFourthLoop();
+                SoundManager.endThirdLoop();
                 break;
             default:
                 //nothing for default case
@@ -484,7 +494,9 @@ public class Game extends Model{
 
         circleTimer = CORRECT_COUNT_TIMER;
 
-        //TODO: end gameplay music, start more relaxing 'it's done now pls to relax' music
+        SoundManager.startResultsLoop();
+        SoundManager.endBacking();
+        SoundManager.endFourthLoop();
     }
 
 
@@ -538,6 +550,7 @@ public class Game extends Model{
     //moves to the ALL_DONE gamestate
     private void ccc_moveToNextStateLogic(){
         gameState = ALL_DONE;
+        aliveHUD.add(infoD.revive("Press the any button to continue."));
     }
 
 
